@@ -2,21 +2,49 @@ plugins {
 	id 'org.springframework.boot' version '2.4.0'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
+    // Documentation :
+    // https://github.com/statisticsnorway/ssb-developer-guide/blob/gradle-info/docs/azure_pipeline_doc.md#maven-repository-credentials-in-gradle
+    id 'net.linguica.maven-settings' version '0.5'
+    id 'org.owasp.dependencycheck' version '6.0.3'
 }
 
 group = 'no.microdata.datastore'
-version = '0.0.1-SNAPSHOT'
+def buildNumber = project.hasProperty('buildNumber') ? project.property('buildNumber') : '0'
+def applicationTitle = project.name
+def applicationVersion = "1.5.$buildNumber"
+project.version = applicationVersion
+
 sourceCompatibility = '15'
 
+// Replacing placeholder in application.properties with name and version
+processResources{
+    filesMatching('application.properties') {
+        filter ReplaceTokens, tokens: [APPLICATION_VERSION: new String(applicationVersion),
+                                       APPLICATION_NAME   : new String(applicationTitle)]
+    }
+}
+
 repositories {
-	mavenCentral()
+    maven {
+        name = 'ssb-bip-public' // should match <id>myRepo</id> of appropriate <server> in settings.xml
+        url = 'https://nexus.prod-bip-ci.ssb.no/repository/maven-public/'
+    }
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
 	useJUnitPlatform()
+}
+
+dependencyCheck {
+    //Build will fail on HIGH CVSS
+    failBuildOnCVSS=7.0
+    format = org.owasp.dependencycheck.reporting.ReportGenerator.Format.ALL
 }
