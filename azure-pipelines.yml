@@ -1,0 +1,87 @@
+name: $(Build.SourceBranch)-$(date:yyyyMMdd)$(rev:.r)
+
+trigger:
+  branches:
+    include:
+      - '*'
+  tags:
+    include:
+      - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
+  imageName: 'eu.gcr.io/prod-bip/ssb/microdata/test-datastore'
+  imageTagBeforeVulnerabilityScan: $(Build.SourceBranchName)-$(fullSha)
+  repoName: 'prod-bip/ssb/microdata/test-datastore'
+  latestTag: 'bipLatest'
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]  
+
+steps:
+# Authenticate Maven to Nexus using predefined Service Connections
+# (Project Settings->Pipelines->Service Connections)
+
+- script: |
+    date
+    sudo timedatectl set-timezone Europe/Oslo
+    date    
+  displayName: Set timezone
+  
+- task: MavenAuthenticate@0
+  displayName: 'Maven authenticate'
+  inputs:
+    mavenServiceConnections: 'mvnSsbBipPublic-Microdatano,mvnSsbBipSnapshots-Microdatano'
+
+- task: Cache@2
+  inputs:
+    key: 'gradle | "$(Agent.OS)"'
+    restoreKeys: gradle
+    path: $(GRADLE_USER_HOME)
+  displayName: Gradle build cache
+
+- task: Gradle@2
+  displayName: 'Build'
+  inputs:
+    options: '--build-cache -PbuildNumber=$(Build.BuildId) --info'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'build'
+
+- script: |
+    # stop the Gradle daemon to ensure no files are left open (impacting the save cache operation later)
+    ./gradlew --stop
+  displayName: Stop Gradle daemon
+
+- task: Docker@2
+  displayName: 'Docker build'
+  condition: and(succeeded(), eq(variables.isMaster, true))
+  inputs:
+    repository: $(imageName)
+    command: 'build'
+    Dockerfile: 'Dockerfile'
+    tags: |
+      $(Build.BuildId)
+      $(latestTag)
+      
+# Authenticate Docker to GCR using predefined service connection
+- task: Docker@2
+  displayName: 'Login to GCR'
+  condition: and(succeeded(), eq(variables.isMaster, true))
+  inputs:
+    command: login
+    containerRegistry: gcrServiceConnection-Microdatano
+
+# Push Docker Image to GCR
+- task: Docker@2
+  displayName: 'Push image to GCR'
+  condition: and(succeeded(), eq(variables.isMaster, true))
+  inputs:
+    ContainerRegistry: |
+      gcrServiceConnection-Microdatano
+    repository: $(repoName)
+    command: 'push'
+    tags: |
+      $(Build.BuildId)
+      $(latestTag)
