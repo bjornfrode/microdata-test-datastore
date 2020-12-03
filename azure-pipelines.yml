@@ -41,6 +41,7 @@ steps:
 
 - script: |
     which java
+    java -version
     date
     sudo timedatectl set-timezone Europe/Oslo
     date    
