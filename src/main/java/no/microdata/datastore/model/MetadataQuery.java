@@ -3,6 +3,7 @@ package no.microdata.datastore.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,6 +39,39 @@ public class MetadataQuery {
 
     private boolean hasRequiredField(String field) {
         return field != null && !field.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "MetadataQuery["
+                + "languages=" + languages
+                + ", requestId=" + requestId
+                + ", names=" + String.join(", ", names)
+                + ", version=" + version
+                + ']';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(languages, requestId, names, version);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        MetadataQuery other = (MetadataQuery) obj;
+        return Objects.equals(languages, other.languages)
+                && Objects.equals(requestId, other.requestId)
+                && Objects.equals(names, other.names)
+                && Objects.equals(version, other.version);
     }
 
     public String getLanguages() {
