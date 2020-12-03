@@ -24,7 +24,7 @@ steps:
 # (Project Settings->Pipelines->Service Connections)
 
 - script: |
-    curl -LJo jdk15.tar.gz https://cdn.azul.com/zulu/bin/zulu15.28.13-ca-jdk15.0.1-linux_musl_x64.tar.gz
+    curl -LJo jdk15.tar.gz https://cdn.azul.com/zulu/bin/zulu15.28.51-ca-jdk15.0.1-linux_x64.tar.gz
     sudo mkdir -p /builds/binaries/externals
     sudo mv jdk15.tar.gz /builds
     sudo chown -R $(id -u):$(id -g) /builds
@@ -38,10 +38,9 @@ steps:
     jdkSourceOption: LocalDirectory
     jdkFile: "/builds/jdk15.tar.gz"
     jdkDestinationDirectory: "/builds/binaries/externals"
+  displayName: Install Azul's Java 15    
 
 - script: |
-    which java
-    java -version
     date
     sudo timedatectl set-timezone Europe/Oslo
     date    
