@@ -10,6 +10,6 @@ import java.util.Map;
 public class GenericServiceImpl implements GenericService {
     @Override
     public List<Map> findLanguages(String requestId) {
-        return null;
+        return List.of(Map.of("key", "value"));
     }
 }

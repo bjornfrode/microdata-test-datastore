@@ -9,11 +9,11 @@ import java.util.Map;
 public class DataStoreServiceImpl implements DataStoreService {
     @Override
     public Map findAllDataStoreVersions(String requestId) {
-        return null;
+        return Map.of("key", "value");
     }
 
     @Override
     public Map findDatastructureVersion(String requestId, String name, String datastoreVersion) {
-        return null;
+        return Map.of("key", "value");
     }
 }

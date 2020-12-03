@@ -10,6 +10,6 @@ import java.util.Map;
 public class AllMetadataServiceImpl implements AllMetadataService {
     @Override
     public Map find(MetadataQuery query) {
-        return null;
+        return Map.of("key", "value");
     }
 }
