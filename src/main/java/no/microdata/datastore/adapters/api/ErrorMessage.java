@@ -4,7 +4,12 @@ import java.util.Map;
 
 public class ErrorMessage {
 
-    static Map requestValidationError(String field) {
+    public static final String INPUT_FIELD_START_DATE = "startDate";
+    public static final String INPUT_FIELD_STOP_DATE = "stopDate";
+    public static final String INPUT_FIELD_DATASTRUCTURE_NAME = "datastructureName";
+    public static final String INPUT_FIELD_VERSION = "version";
+
+    public static Map requestValidationError(String field) {
         String msg = String.format("child \"%s\" fails because [\"%s\" is required]", field, field);
 
         return Map.of(
@@ -15,7 +20,7 @@ public class ErrorMessage {
         );
     }
 
-    static Map requestDataNotFoundError(String dataSetName) {
+    public static Map requestDataNotFoundError(String dataSetName) {
         String msg = String.format("No data structure named '%s' was found.", dataSetName);
 
         return Map.of(
