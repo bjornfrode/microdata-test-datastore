@@ -43,4 +43,12 @@ class InputTimeQuery extends InputQuery{
         }
         return string.concat(" }");
     }
+
+    public Long getDate() {
+        return date;
+    }
+
+    public void setDate(Long date) {
+        this.date = date;
+    }
 }
