@@ -6,6 +6,7 @@ import no.microdata.datastore.adapters.api.dto.InputFixedQuery;
 import no.microdata.datastore.adapters.api.dto.InputQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimePeriodQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimeQuery;
+import no.microdata.datastore.model.DatasetRevision;
 import no.microdata.datastore.model.MetadataQuery;
 import no.microdata.datastore.transformations.VersionUtils;
 import org.slf4j.Logger;
@@ -73,7 +74,7 @@ class DataAPI {
                     ));
 
             DatasetRevision datasetRevision =
-                    new DatasetRevision(datasetName: dataStructureName, version: dataStructureVersion);
+                    new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
             EventQuery eventQuery = new EventQuery( datasetRevision:  datasetRevision,
                     startDate: LocalDate.ofEpochDay(startDate),
@@ -131,7 +132,7 @@ class DataAPI {
                     ));
 
             DatasetRevision datasetRevision =
-                    new DatasetRevision(datasetName: dataStructureName, version: dataStructureVersion);
+                    new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
             StatusQuery statusQuery = new StatusQuery(  datasetRevision: datasetRevision,
                     date: LocalDate.ofEpochDay(dateValue),
@@ -194,7 +195,7 @@ class DataAPI {
                     ));
 
             DatasetRevision datasetRevision =
-                    new DatasetRevision(datasetName: dataStructureName, version: dataStructureVersion);
+                    new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
             FixedQuery fixedQuery = new FixedQuery( datasetRevision: datasetRevision,
                     requestId: requestId,
