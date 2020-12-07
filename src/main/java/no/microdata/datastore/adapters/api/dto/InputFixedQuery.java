@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import static no.microdata.datastore.adapters.api.ErrorMessage.*;
 
-class InputFixedQuery extends InputQuery{
+public class InputFixedQuery extends InputQuery{
     final static Logger log = LoggerFactory.getLogger(InputFixedQuery.class);
 
     /**
@@ -17,7 +17,7 @@ class InputFixedQuery extends InputQuery{
      * @throws BadRequestException if not valid
      * @throws UnauthorizedException if authentication fails
      */
-    boolean validate() {
+    public boolean validate() {
         super.validate();
         return true;
     }

@@ -14,7 +14,7 @@ import static no.microdata.datastore.transformations.Utils.*;
 
 import static no.microdata.datastore.adapters.api.ErrorMessage.*;
 
-abstract class InputQuery {
+public abstract class InputQuery {
 
     String dataStructureName;
     String version;
