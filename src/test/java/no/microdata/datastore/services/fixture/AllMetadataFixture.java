@@ -9,8 +9,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-import static no.microdata.datastore.transformations.DatastoreUtils.*;
-
 public class AllMetadataFixture {
 
     public static Map<String, Object> allMetadata() throws IOException {
@@ -20,9 +18,9 @@ public class AllMetadataFixture {
 
         return Map.of(
                 "dataStore", Map.of(
-                        "name", DATASTORE_NAME,
-                        "label", DATASTORE_LABEL,
-                        "description", DATASTORE_DESCRIPTION,
+                        "name", "dummy datastore name",
+                        "label", "dummy datastore label",
+                        "description", "dummy datastore description",
                         "languageCode", "no"
                 ),
                 "languages", GenericAPIFixture.LANGUAGES,
