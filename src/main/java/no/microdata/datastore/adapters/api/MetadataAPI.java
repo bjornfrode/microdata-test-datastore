@@ -23,7 +23,7 @@ import static no.microdata.datastore.adapters.api.Constants.*;
 import static no.microdata.datastore.adapters.api.RequestId.*;
 
 @RestController
-@RequestMapping(produces = {"application/json;charset=UTF-8"})
+@RequestMapping(produces = {"application/json;charset=UTF-8", "application/x-msgpack"})
 class MetadataAPI {
 
     private final static Logger log = LoggerFactory.getLogger(MetadataAPI.class);
@@ -56,7 +56,7 @@ class MetadataAPI {
     }
 
     @RequestMapping(value = "/metadata/data-structures", method = RequestMethod.GET)
-    List<Map> getDataStructures(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
+    List<Map<String, Object>> getDataStructures(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
                                 @RequestHeader(value = ACCEPT_LANGUAGE, required = false) List<String> languages,
                                 @RequestParam(value = NAMES, required = false) List names,
                                 @RequestParam(value = VERSION, required = true) String version,
@@ -79,7 +79,7 @@ class MetadataAPI {
     }
 
     @RequestMapping(value = "/metadata/current/data-structures", method = RequestMethod.GET)
-    List<Map> getCurrentDataStructures(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
+    List<Map<String, Object>> getCurrentDataStructures(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
                                 @RequestHeader(value = ACCEPT_LANGUAGE, required = false) List<String> languages,
                                 @RequestParam(value = NAMES, required = true) List names,
                                 HttpServletResponse response) {
@@ -101,14 +101,13 @@ class MetadataAPI {
     }
 
     @RequestMapping(value = "/metadata/all", method = RequestMethod.GET)
-    Map getAllMetadata(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
+    Map<String, Object> getAllMetadata(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
                        @RequestHeader(value = ACCEPT_LANGUAGE, required = false) List<String> languages,
                        @RequestParam(value = VERSION, required = true) String version,
                        HttpServletResponse response) {
 
         MetadataQuery query = new MetadataQuery(
                 Map.of(
-                        "names", null,
                         "languages", joinToString(languages),
                         "requestId", verifyAndUpdateRequestId(requestId),
                         "version", VersionUtils.toThreeLabelsIfNotDraft(version)
@@ -123,7 +122,7 @@ class MetadataAPI {
     }
 
     @RequestMapping(value = "/metadata/data-structure/version", method = RequestMethod.GET)
-    Map getDatastructureVersion(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
+    Map<String, String> getDatastructureVersion(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
                                 @RequestHeader(value = ACCEPT_LANGUAGE, required = false) List<String> languages,
                                 @RequestParam(value = DATASTRUCTURE_NAME, required = true) String name,
                                 @RequestParam(value = DATASTORE_VERSION, required = true) String datastoreVersion,
@@ -146,7 +145,7 @@ class MetadataAPI {
     }
 
     @RequestMapping(value = "/languages", method = RequestMethod.GET)
-    List<Map> getLanguages(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
+    List<Map<String, Object>> getLanguages(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
                            HttpServletResponse response) {
 
         log.info("Entering getLanguages() with request id = {}", requestId);

@@ -6,6 +6,6 @@ import java.util.Map;
 
 public interface AllMetadataService {
 
-    Map find(MetadataQuery query);
+    Map<String, Object> find(MetadataQuery query);
 
 }

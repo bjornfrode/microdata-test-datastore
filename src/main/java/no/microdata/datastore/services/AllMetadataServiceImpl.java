@@ -9,7 +9,7 @@ import java.util.Map;
 @Service
 public class AllMetadataServiceImpl implements AllMetadataService {
     @Override
-    public Map find(MetadataQuery query) {
+    public Map<String, Object> find(MetadataQuery query) {
         return Map.of("key", "value");
     }
 }

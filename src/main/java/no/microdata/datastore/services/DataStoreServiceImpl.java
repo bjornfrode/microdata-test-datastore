@@ -8,12 +8,12 @@ import java.util.Map;
 @Service
 public class DataStoreServiceImpl implements DataStoreService {
     @Override
-    public Map findAllDataStoreVersions(String requestId) {
+    public Map<String, Object> findAllDataStoreVersions(String requestId) {
         return Map.of("key", "value");
     }
 
     @Override
-    public Map findDatastructureVersion(String requestId, String name, String datastoreVersion) {
+    public Map<String, String> findDatastructureVersion(String requestId, String name, String datastoreVersion) {
         return Map.of("key", "value");
     }
 }
