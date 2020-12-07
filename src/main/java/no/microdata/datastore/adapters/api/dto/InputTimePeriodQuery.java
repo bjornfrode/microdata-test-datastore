@@ -9,7 +9,7 @@ import static no.microdata.datastore.transformations.Utils.*;
 
 // import static no.microdata.datastore.adapters.api.ErrorMessage.*;
 
-class InputTimePeriodQuery extends InputQuery{
+public class InputTimePeriodQuery extends InputQuery{
 
     final static Logger log = LoggerFactory.getLogger(InputTimePeriodQuery.class);
     Long startDate;
@@ -22,7 +22,7 @@ class InputTimePeriodQuery extends InputQuery{
      * @throws BadRequestException if not valid
      * @throws UnauthorizedException if authentication fails
      */
-    boolean validate() {
+    public boolean validate() {
         super.validate();
         if (isNullOrEmpty(startDate))
             throw  new BadRequestException(no.microdata.datastore.adapters.api.ErrorMessage.requestValidationError(no.microdata.datastore.adapters.api.ErrorMessage.INPUT_FIELD_START_DATE));

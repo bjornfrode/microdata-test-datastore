@@ -1,8 +1,12 @@
 package no.microdata.datastore.adapters.api;
 
+import com.google.common.base.Stopwatch;
+import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
+import no.microdata.datastore.adapters.api.dto.InputFixedQuery;
 import no.microdata.datastore.adapters.api.dto.InputQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimePeriodQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimeQuery;
+import no.microdata.datastore.model.DatasetRevision;
 import no.microdata.datastore.model.MetadataQuery;
 import no.microdata.datastore.transformations.VersionUtils;
 import org.slf4j.Logger;
@@ -48,10 +52,10 @@ class DataAPI {
 
             final Stopwatch timer = Stopwatch.createStarted();
 
-            String dataStructureName = inputTimePeriodQuery.dataStructureName;
-            String datastoreVersion = String.valueOf(inputTimePeriodQuery.version);
-            Long startDate = inputTimePeriodQuery.startDate;
-            Long stopDate = inputTimePeriodQuery.stopDate;
+            String dataStructureName = inputTimePeriodQuery.getDataStructureName();
+            String datastoreVersion = String.valueOf(inputTimePeriodQuery.getVersion());
+            Long startDate = inputTimePeriodQuery.getStartDate();
+            Long stopDate = inputTimePeriodQuery.getStopDate();
 
             requestId = verifyAndUpdateRequestId(requestId);
 
@@ -66,11 +70,11 @@ class DataAPI {
                             "names", List.of(dataStructureName),
                             "languages", languages,
                             "version", datastoreVersion,
-                            "includeAttributes", inputTimePeriodQuery.includeAttributes
+                            "includeAttributes", inputTimePeriodQuery.getIncludeAttributes()
                     ));
 
             DatasetRevision datasetRevision =
-                    new DatasetRevision(datasetName: dataStructureName, version: dataStructureVersion);
+                    new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
             EventQuery eventQuery = new EventQuery( datasetRevision:  datasetRevision,
                     startDate: LocalDate.ofEpochDay(startDate),
@@ -107,9 +111,9 @@ class DataAPI {
 
             final Stopwatch timer = Stopwatch.createStarted();
 
-            String dataStructureName = inputTimeQuery.dataStructureName;
-            String datastoreVersion = String.valueOf(inputTimeQuery.version);
-            Long dateValue = inputTimeQuery.date;
+            String dataStructureName = inputTimeQuery.getDataStructureName();
+            String datastoreVersion = String.valueOf(inputTimeQuery.getVersion());
+            Long dateValue = inputTimeQuery.getDate();
             requestId = verifyAndUpdateRequestId(requestId);
 
             DataStoreVersionQuery dataStoreVersionQuery =
@@ -124,11 +128,11 @@ class DataAPI {
                             "languages", languages,
                             "requestId", requestId,
                             "version", datastoreVersion,
-                            "includeAttributes", inputTimePeriodQuery.includeAttributes
+                            "includeAttributes", inputTimeQuery.getIncludeAttributes()
                     ));
 
             DatasetRevision datasetRevision =
-                    new DatasetRevision(datasetName: dataStructureName, version: dataStructureVersion);
+                    new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
             StatusQuery statusQuery = new StatusQuery(  datasetRevision: datasetRevision,
                     date: LocalDate.ofEpochDay(dateValue),
@@ -169,8 +173,8 @@ class DataAPI {
 
             final Stopwatch timer = Stopwatch.createStarted();
 
-            String dataStructureName = inputFixedQuery.dataStructureName;
-            String datastoreVersion = String.valueOf(inputFixedQuery.version);
+            String dataStructureName = inputFixedQuery.getDataStructureName();
+            String datastoreVersion = String.valueOf(inputFixedQuery.getVersion());
 
             requestId = verifyAndUpdateRequestId(requestId);
 
@@ -191,7 +195,7 @@ class DataAPI {
                     ));
 
             DatasetRevision datasetRevision =
-                    new DatasetRevision(datasetName: dataStructureName, version: dataStructureVersion);
+                    new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
             FixedQuery fixedQuery = new FixedQuery( datasetRevision: datasetRevision,
                     requestId: requestId,
@@ -262,7 +266,7 @@ class DataAPI {
 
 public abstract class RairdException extends RuntimeException {
 
-    protected Map errorMessage
+    protected Map errorMessage;
 
     public RairdException(Map errorMessage) {
         this.errorMessage = errorMessage

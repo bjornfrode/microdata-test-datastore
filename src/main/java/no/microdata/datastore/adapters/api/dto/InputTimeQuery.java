@@ -8,7 +8,7 @@ import static no.microdata.datastore.transformations.Utils.*;
 
 //import static no.microdata.datastore.adapters.api.ErrorMessage.*;
 
-class InputTimeQuery extends InputQuery{
+public class InputTimeQuery extends InputQuery{
 
     final static Logger log = LoggerFactory.getLogger(InputTimeQuery.class);
     Long date;
@@ -19,11 +19,15 @@ class InputTimeQuery extends InputQuery{
      * @return true if time query is valid, otherwise throws BadRequestException
      * @throws BadRequestException if not valid
      */
-    boolean validate() {
+    public boolean validate() {
         super.validate();
         if (isNullOrEmpty(date))
             throw  new BadRequestException(no.microdata.datastore.adapters.api.ErrorMessage.requestValidationError(no.microdata.datastore.adapters.api.ErrorMessage.INPUT_FIELD_START_DATE));
         return true;
+    }
+
+    public Long getDate() {
+        return date;
     }
 
     @Override
