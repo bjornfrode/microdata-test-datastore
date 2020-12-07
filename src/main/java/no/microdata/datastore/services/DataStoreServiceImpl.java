@@ -12,8 +12,4 @@ public class DataStoreServiceImpl implements DataStoreService {
         return Map.of("key", "value");
     }
 
-    @Override
-    public Map<String, String> findDatastructureVersion(String requestId, String name, String datastoreVersion) {
-        return Map.of("key", "value");
-    }
 }

@@ -99,29 +99,6 @@ class MetadataAPI {
         return allMetadataService.find(query);
     }
 
-    @RequestMapping(value = "/metadata/data-structure/version", method = RequestMethod.GET)
-    Map<String, String> getDatastructureVersion(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
-                                @RequestHeader(value = ACCEPT_LANGUAGE, required = false) List<String> languages,
-                                @RequestParam(value = DATASTRUCTURE_NAME, required = true) String name,
-                                @RequestParam(value = DATASTORE_VERSION, required = true) String datastoreVersion,
-                                HttpServletResponse response) {
-
-        log.info("Entering getDatastructureVersion with name = {} and datastoreVersion = {}", name, datastoreVersion);
-
-        var verifiedRequestId = verifyAndUpdateRequestId(requestId);
-
-        response.setHeader(X_REQUEST_ID, verifiedRequestId);
-        response.setHeader(CONTENT_LANGUAGE, "no");
-
-        var datastructureVersion =
-                dataStoreService.findDatastructureVersion(verifiedRequestId, name, VersionUtils.toThreeLabelsIfNotDraft(datastoreVersion));
-
-        log.info("Leaving getDatastructureVersion with name = {} and datastoreVersion = {}",
-                datastructureVersion.get("datastructureName"), datastructureVersion.get("datastructureVersion"));
-
-        return datastructureVersion;
-    }
-
     @RequestMapping(value = "/languages", method = RequestMethod.GET)
     List<Map<String, Object>> getLanguages(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
                            HttpServletResponse response) {
