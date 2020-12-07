@@ -78,28 +78,6 @@ class MetadataAPI {
         return dataStructureService.find(query);
     }
 
-    @RequestMapping(value = "/metadata/current/data-structures", method = RequestMethod.GET)
-    List<Map<String, Object>> getCurrentDataStructures(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
-                                @RequestHeader(value = ACCEPT_LANGUAGE, required = false) List<String> languages,
-                                @RequestParam(value = NAMES, required = true) List names,
-                                HttpServletResponse response) {
-
-        MetadataQuery query = new MetadataQuery(
-                Map.of(
-                        "names", names,
-                        "languages",  joinToString(languages),
-                        "requestId", verifyAndUpdateRequestId(requestId),
-                        "version", "dummy"
-                ));
-
-        log.info("Entering getCurrentDataStructures() where query = {}", query);
-
-        response.setHeader(X_REQUEST_ID, query.getRequestId());
-        response.setHeader(CONTENT_LANGUAGE, "no");
-
-        return dataStructureService.findCurrent(query);
-    }
-
     @RequestMapping(value = "/metadata/all", method = RequestMethod.GET)
     Map<String, Object> getAllMetadata(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
                        @RequestHeader(value = ACCEPT_LANGUAGE, required = false) List<String> languages,

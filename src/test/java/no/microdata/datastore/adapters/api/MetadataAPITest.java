@@ -159,47 +159,6 @@ class MetadataAPITest {
     }
 
     @Test
-    public void testGetCurrentDataStructures() throws Exception {
-        var expectedDataStructures = MetadataAPIFixture.dataStructures();
-        MetadataQuery query = new MetadataQuery(Map.of(
-                "names", List.of("FNR", "AKT_ARBAP"),
-                "languages", "no",
-                "requestId", "56",
-                "version", "dummy"
-        ));
-
-        when(dataStructureService.findCurrent(query)).thenReturn(expectedDataStructures);
-        var names = "FNR,AKT_ARBAP";
-
-        mockMvc.perform(
-                get("/metadata/current/data-structures?&names={names}", names)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(Constants.X_REQUEST_ID, query.getRequestId())
-                        .header(Constants.ACCEPT_LANGUAGE, query.getLanguages())
-                .header(Constants.ACCEPT, Constants.ACCEPT_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE_JSON))
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedDataStructures)))
-                .andDo(document("getCurrentDataStructures",
-                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                        requestParameters(
-                                parameterWithName("names").description(NAMES_DESCRIPTION_CURRENT)
-                        ),
-                        requestHeaders(
-                                HeaderDocumentation.headerWithName(Constants.CONTENT_TYPE).description(CONTENT_TYPE_DESCRIPTION),
-                                HeaderDocumentation.headerWithName(Constants.X_REQUEST_ID).description(REQUESTID_DESCRIPTION),
-                                HeaderDocumentation.headerWithName(Constants.ACCEPT_LANGUAGE).description(ACCEPT_LANGUAGE_DESCRIPTION),
-                                HeaderDocumentation.headerWithName(Constants.ACCEPT).description(Constants.ACCEPT_DESCRIPTION)),
-                        responseHeaders(
-                                HeaderDocumentation.headerWithName(Constants.CONTENT_TYPE).description(CONTENT_TYPE_DESCRIPTION))
-                        )
-                );
-
-        verify(dataStructureService).findCurrent(query);
-    }
-
-    @Test
     public void testGetAllMetadata() throws Exception {
         var requestVersion = "3.2.1.0";
         var expectedAllMetadata = MetadataAPIFixture.allMetadata();
