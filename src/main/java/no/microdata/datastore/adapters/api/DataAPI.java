@@ -6,9 +6,16 @@ import no.microdata.datastore.adapters.api.dto.InputFixedQuery;
 import no.microdata.datastore.adapters.api.dto.InputQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimePeriodQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimeQuery;
+import no.microdata.datastore.exceptions.BadRequestException;
+import no.microdata.datastore.exceptions.DataNotFoundException;
+import no.microdata.datastore.exceptions.NotFoundException;
+import no.microdata.datastore.exceptions.UnauthorizedException;
 import no.microdata.datastore.model.DatasetRevision;
+import no.microdata.datastore.model.EventQuery;
+import no.microdata.datastore.model.IntervalFilter;
 import no.microdata.datastore.model.MetadataQuery;
-import no.microdata.datastore.transformations.VersionUtils;
+import no.microdata.datastore.model.UnitIdFilter;
+import no.microdata.datastore.model.ValueFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +33,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static no.microdata.datastore.adapters.api.Constants.*;
@@ -76,14 +83,17 @@ class DataAPI {
             DatasetRevision datasetRevision =
                     new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
-            EventQuery eventQuery = new EventQuery( datasetRevision:  datasetRevision,
-                    startDate: LocalDate.ofEpochDay(startDate),
-                    endDate: LocalDate.ofEpochDay(stopDate),
-                    requestId: requestId,
-                    valueFilter: createValueFilter(inputTimePeriodQuery),
-                    unitIdFilter:  createUnitIdFilter(inputTimePeriodQuery),
-                    intervalFilter: createIntervalFilter(inputTimePeriodQuery),
-                    includeAttributes: inputTimePeriodQuery.includeAttributes)
+            EventQuery eventQuery = new EventQuery(
+                    Map.of(
+                            "datasetRevision",  datasetRevision,
+                            "startDate", LocalDate.ofEpochDay(startDate),
+                            "endDate", LocalDate.ofEpochDay(stopDate),
+                            "requestId", requestId,
+                            "valueFilter", createValueFilter(inputTimePeriodQuery),
+                            "unitIdFilter",  createUnitIdFilter(inputTimePeriodQuery),
+                            "intervalFilter", createIntervalFilter(inputTimePeriodQuery),
+                            "includeAttributes", inputTimePeriodQuery.getIncludeAttributes()
+                    ));
 
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
@@ -231,74 +241,35 @@ class DataAPI {
     }
 
     private static ValueFilter createValueFilter(InputQuery inputQuery) {
-        return inputQuery.hasValueFilter() ? ValueFilter.create(inputQuery.values) : ValueFilter.noFilterInstace();
+        return inputQuery.hasValueFilter() ? new ValueFilter((Set<String>) inputQuery.getValues()) : ValueFilter.noFilterInstance();
     }
 
     private static UnitIdFilter createUnitIdFilter(InputQuery inputQuery) {
-        return inputQuery.population ? new UnitIdFilter(inputQuery.populationFilter()) : UnitIdFilter.noFilterInstance();
+        return UnitIdFilter.create(inputQuery.populationFilter());
     }
 
     private static IntervalFilter createIntervalFilter(InputQuery inputQuery) {
         return inputQuery.hasIntervalFilter() ?
-                IntervalFilter.create(inputQuery.intervalFilter) : IntervalFilter.fullIntervalInstance();
+                IntervalFilter.create(inputQuery.getIntervalFilter()) : IntervalFilter.fullIntervalInstance();
     }
 
     @ExceptionHandler(BadRequestException.class)
     ResponseEntity<String> handleBadRequestException(BadRequestException e) throws IOException {
-        new ResponseEntity<String>(e.getErrorMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
     ResponseEntity<String> handleNotFoundException(NotFoundException e) throws IOException {
-        new ResponseEntity<String>(e.getErrorMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DataNotFoundException.class)
     ResponseEntity<String> handleDataNotFoundException(DataNotFoundException e) throws IOException {
-        new ResponseEntity<String>(e.getMessageAsMap(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) throws IOException {
-        new ResponseEntity<String>(e.getErrorMessage(), HttpStatus.UNAUTHORIZED);
-    }
-}
-
-public abstract class RairdException extends RuntimeException {
-
-    protected Map errorMessage;
-
-    public RairdException(Map errorMessage) {
-        this.errorMessage = errorMessage
-    }
-
-    @Override
-    public String getMessage(){
-        JsonOutput.toJson(errorMessage).toString()
-    }
-
-    public Map getErrorMessage(){
-        errorMessage
-    }
-}
-
-@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "NotInUse")
-public class BadRequestException extends RairdException {
-    public BadRequestException(Map errorMessage) {
-        super(errorMessage)
-    }
-}
-
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "NotInUse")
-public class NotFoundException extends RairdException {
-    public NotFoundException(Map errorMessage) {
-        super(errorMessage)
-    }
-}
-
-@ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "NotInUse")
-public class UnauthorizedException extends RairdException {
-    public UnauthorizedException(Map errorMessage) {
-        super(errorMessage)
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

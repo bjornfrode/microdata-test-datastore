@@ -38,7 +38,7 @@ public abstract class InputQuery {
         return true;
     }
 
-    boolean hasValueFilter(){
+    public boolean hasValueFilter(){
         return  (values!=null && values.size() > 0) ? true : false;
     }
 
@@ -46,11 +46,11 @@ public abstract class InputQuery {
         return  (populationFilter().size() > 0) ? true : false;
     }
 
-    boolean hasIntervalFilter(){
+    public boolean hasIntervalFilter(){
         return  (intervalFilter!=null && intervalFilter.length() > 0) ? true : false;
     }
 
-    Set<Long> populationFilter(){
+    public Set<Long> populationFilter(){
         return population.getOrDefault("unitIds", new HashSet<Long>());
     }
 
