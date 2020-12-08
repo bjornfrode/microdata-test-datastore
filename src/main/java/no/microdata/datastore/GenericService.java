@@ -5,6 +5,6 @@ import java.util.Map;
 
 public interface GenericService {
 
-    List<Map> findLanguages(String requestId);
+    List<Map<String, Object>> findLanguages(String requestId);
 
 }

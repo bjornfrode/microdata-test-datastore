@@ -1,0 +1,215 @@
+= Metadatastore Rest API
+;
+:doctype: book
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+// Disable webfonts, using uglier local fonts.
+:webfonts!:
+:docinfo2:
+
+[[overview]]
+= Overview
+Rest API for returning metadata from a Datastore. Every resource return either JSON or Message Pack format.
+
+== Authentication
+This is an open API without any authentication.
+
+== Errors
+We use conventional HTTP response codes to indicate the success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error, and codes in the 5xx range indicate an error within the API.
+
+== Request IDs
+Each API request has an system-wide request identifier. You can identify this value in the response headers, under `x-request-id`.
+
+[[resources]]
+== Resources
+
+== Language
+The `Language` resource.
+
+[[resources-languages]]
+=== Retrieve languages
+
+Gets all available languages. Returns an array of Language objects indicating what languages are supported
+by the Data Store.
+
+==== Request path parameters
+
+None.
+
+==== Request headers
+
+include::{snippets}/getLanguages/request-headers.adoc[]
+
+==== Example request
+
+include::{snippets}/getLanguages/curl-request.adoc[]
+
+include::{snippets}/getLanguages/http-request.adoc[]
+
+==== Response structure
+
+include::{snippets}/getLanguages/response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}/getLanguages/http-response.adoc[]
+
+== Datastore
+The `Datastore` resource
+
+[[resources-datastore-versioning]]
+=== Retrieve data store versions
+
+Gets information about the versions in the data store.
+
+==== Request path parameters
+
+None.
+
+==== Request headers
+
+include::{snippets}/metadata-api-getDataStore/request-headers.adoc[]
+
+==== Example request
+
+include::{snippets}/metadata-api-getDataStore/curl-request.adoc[]
+
+include::{snippets}/metadata-api-getDataStore/http-request.adoc[]
+
+==== Response headers
+
+include::{snippets}/metadata-api-getDataStore/response-headers.adoc[]
+
+==== Example response
+
+include::{snippets}/metadata-api-getDataStore/http-response.adoc[]
+
+
+[[resources-datastore]]
+=== Retrieve data structure version
+
+This endpoint receives a request with data structure name and the conceptual datastore version and
+returns the actual version for the data structure. +
+The version of the data structure will always be equal or lower to the datastore version. +
+The endpoint will return an empty json if the operationType for this data structure version is 'REMOVE'.
+
+==== Request path parameters
+
+include::{snippets}/getDatastructureVersion/request-parameters.adoc[]
+
+==== Request headers
+
+include::{snippets}/getDatastructureVersion/request-headers.adoc[]
+
+==== Example request
+
+include::{snippets}/getDatastructureVersion/curl-request.adoc[]
+
+include::{snippets}/getDatastructureVersion/http-request.adoc[]
+
+==== Response structure
+
+include::{snippets}/getDatastructureVersion/response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}/getDatastructureVersion/http-response.adoc[]
+
+
+
+== Datastructure
+The `Datastructure`resource.
+
+[[resources-datastructures]]
+=== Retrieve datastructure
+
+Gets a Datastructure.
+
+==== Request path parameters
+
+include::{snippets}/getDataStructures/request-parameters.adoc[]
+
+==== Request headers
+
+include::{snippets}/getDataStructures/request-headers.adoc[]
+
+
+==== Example request
+
+include::{snippets}/getDataStructures/curl-request.adoc[]
+include::{snippets}/getDataStructures/http-request.adoc[]
+
+==== Response headers
+
+include::{snippets}/getDataStructures/response-headers.adoc[]
+
+==== Example response
+
+include::{snippets}/getDataStructures/http-response.adoc[]
+
+
+
+=== Retrieve current datastructure
+
+Gets current datastructure, no version is required.
+
+==== Request path parameters
+
+include::{snippets}/getCurrentDataStructures/request-parameters.adoc[]
+
+==== Request headers
+
+include::{snippets}/getCurrentDataStructures/request-headers.adoc[]
+
+
+==== Example request
+
+include::{snippets}/getCurrentDataStructures/curl-request.adoc[]
+include::{snippets}/getCurrentDataStructures/http-request.adoc[]
+
+==== Response headers
+
+include::{snippets}/getCurrentDataStructures/response-headers.adoc[]
+
+==== Example response
+
+include::{snippets}/getCurrentDataStructures/http-response.adoc[]
+
+
+
+
+== AllMetadata
+The `AllMetadata` resource.
+
+[[resources-allMetadata]]
+=== Retrieve all metadata
+
+Gets all metadata
+
+==== Request path parameters
+
+include::{snippets}/getAllMetadata/request-parameters.adoc[]
+
+==== Request headers
+
+include::{snippets}/getAllMetadata/request-headers.adoc[]
+
+==== Response headers
+
+include::{snippets}/getAllMetadata/response-headers.adoc[]
+
+==== Response structure
+
+include::{snippets}/getAllMetadata/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/getAllMetadata/curl-request.adoc[]
+
+include::{snippets}/getAllMetadata/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/getAllMetadata/http-response.adoc[]
