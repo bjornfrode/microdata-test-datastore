@@ -2,7 +2,7 @@ package no.microdata.datastore.adapters.api.dto;
 
 import java.util.Map;
 
-class Credentials {
+public class Credentials {
 
     final static String VALID_USERNAME = "StatCommandRunner";
     final static String VALID_PASSWORD = "ValidPass";

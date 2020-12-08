@@ -6,6 +6,7 @@ import no.microdata.datastore.adapters.api.dto.InputFixedQuery;
 import no.microdata.datastore.adapters.api.dto.InputQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimePeriodQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimeQuery;
+import no.microdata.datastore.adapters.api.dto.Status;
 import no.microdata.datastore.exceptions.BadRequestException;
 import no.microdata.datastore.exceptions.DataNotFoundException;
 import no.microdata.datastore.exceptions.NotFoundException;
@@ -14,6 +15,7 @@ import no.microdata.datastore.model.DatasetRevision;
 import no.microdata.datastore.model.EventQuery;
 import no.microdata.datastore.model.IntervalFilter;
 import no.microdata.datastore.model.MetadataQuery;
+import no.microdata.datastore.model.StatusQuery;
 import no.microdata.datastore.model.UnitIdFilter;
 import no.microdata.datastore.model.ValueFilter;
 import org.slf4j.Logger;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +56,7 @@ class DataAPI {
                  @RequestHeader(value = ACCEPT_LANGUAGE, required = false) String languages,
                  @RequestBody InputTimePeriodQuery inputTimePeriodQuery, HttpServletResponse response) {
 
-        log.info("Entering getEvent with languages = $languages and request body = $inputTimePeriodQuery");
+        log.info("Entering getEvent with languages = {} and request body = {}", languages, inputTimePeriodQuery);
 
         if (inputTimePeriodQuery.validate()) {
 
@@ -98,11 +101,11 @@ class DataAPI {
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
 
-            log.info("getEvent query with metadata query = $metadataQuery and time period query = $eventQuery");
+            log.info("getEvent query with metadata query = {} and time period query = {}", metadataQuery, eventQuery);
             Map dataStructure = dataService.getEvent(metadataQuery, eventQuery);
 
             long elapsed = timer.stop().elapsed(TimeUnit.SECONDS);
-            log.info("Leaving getEvent with elapsed time : $elapsed seconds.");
+            log.info("Leaving getEvent with elapsed time : {} seconds.", elapsed);
 
             return dataStructure;
         } else {
@@ -115,7 +118,7 @@ class DataAPI {
                   @RequestHeader(value = ACCEPT_LANGUAGE, required = false) String languages,
                   @RequestBody InputTimeQuery inputTimeQuery, HttpServletResponse response) {
 
-        log.info("Entering getStatus with languages = $languages and request body = $inputTimeQuery")
+        log.info("Entering getStatus with languages = {} and request body = {}", languages, inputTimeQuery);
 
         if (inputTimeQuery.validate()) {
 
@@ -144,28 +147,32 @@ class DataAPI {
             DatasetRevision datasetRevision =
                     new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
-            StatusQuery statusQuery = new StatusQuery(  datasetRevision: datasetRevision,
-                    date: LocalDate.ofEpochDay(dateValue),
-                    requestId: requestId,
-                    valueFilter: createValueFilter(inputTimeQuery),
-                    unitIdFilter:  createUnitIdFilter(inputTimeQuery),
-                    intervalFilter: createIntervalFilter(inputTimeQuery),
-                    includeAttributes: inputTimeQuery.includeAttributes);
+            StatusQuery statusQuery = new StatusQuery(
+                    Map.of(
+                            "datasetRevision",  datasetRevision,
+                            "date", LocalDate.ofEpochDay(dateValue),
+                            "requestId", requestId,
+                            "valueFilter", createValueFilter(inputTimeQuery),
+                            "unitIdFilter",  createUnitIdFilter(inputTimeQuery),
+                            "intervalFilter", createIntervalFilter(inputTimeQuery),
+                            "includeAttributes", inputTimeQuery.getIncludeAttributes()
+                    ));
 
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
 
-            if (inputTimeQuery.credentials?.password?.equals("InvalidPass")) {
+            if (inputTimeQuery.getCredentials() != null
+                    && Objects.equals(inputTimeQuery.getCredentials().getPassword(), "InvalidPass")) {
                 log.info("Tmp feature!! Have invalid password");
                 response.setStatus(401);
                 return Status.RESPONSE_AUTHENTICATION_FAILURE;
             }
 
-            log.info("getStatus query with metadata query = $metadataQuery and time period query = $statusQuery");
+            log.info("getStatus query with metadata query = {} and time period query = {}", metadataQuery, statusQuery);
             Map dataStructure = dataService.getStatus(metadataQuery, statusQuery);
 
             long elapsed = timer.stop().elapsed(TimeUnit.SECONDS);
-            log.info("Leaving getStatus with elapsed time : $elapsed seconds.");
+            log.info("Leaving getStatus with elapsed time : {} seconds.", elapsed);
 
             return dataStructure;
         } else {
@@ -178,7 +185,8 @@ class DataAPI {
                  @RequestHeader(value = ACCEPT_LANGUAGE, required = false) String languages,
                  @RequestBody InputFixedQuery inputFixedQuery, HttpServletResponse response) {
 
-        log.info("Entering getFixed with languages = $languages and request body = $inputFixedQuery");
+        log.info("Entering getFixed with languages = {} and request body = {}", languages, inputFixedQuery);
+
         if (inputFixedQuery.validate()) {
 
             final Stopwatch timer = Stopwatch.createStarted();
@@ -218,11 +226,11 @@ class DataAPI {
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
 
-            log.info("getStatus query with metadata query = $metadataQuery and query = $fixedQuery");
+            log.info("getStatus query with metadata query = {} and query = {}", metadataQuery, fixedQuery);
             Map dataStructure = dataService.getFixed(metadataQuery, fixedQuery);
 
             long elapsed = timer.stop().elapsed(TimeUnit.SECONDS);
-            log.info("Leaving getFixed with elapsed time : $elapsed seconds.");
+            log.info("Leaving getFixed with elapsed time : {} seconds.", elapsed);
 
             return dataStructure;
         } else {
@@ -232,12 +240,14 @@ class DataAPI {
 
     String getDataStructureVersion(DataStoreVersionQuery query){
         var response = dataService.getDataStructureVersion(query);
-        if (! response.datastructureName.equals(query.dataStructureName)) {
+        if (! response.datastructureName.equals(query.dataStructureName())) {
             throw new RuntimeException("Query data structure name $query.dataStructureName does not match name " +
                     "from metadata store $response.datastructureName");
         }
-        log.info("$query.dataStructureName : dataStore version $query.dataStoreVersion, dataStructure version $response.datastructureVersion");
-        response.datastructureVersion;
+        log.info("{} : dataStore version {}, dataStructure version {}",
+                query.dataStructureName(), query.dataStoreVersion(), response.datastructureVersion);
+
+        return response.datastructureVersion;
     }
 
     private static ValueFilter createValueFilter(InputQuery inputQuery) {
