@@ -26,9 +26,7 @@ public class InputTimeQuery extends InputQuery{
         return true;
     }
 
-    public Long getDate() {
-        return date;
-    }
+
 
     @Override
     public String toString(){
