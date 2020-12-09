@@ -3,6 +3,7 @@ package no.microdata.datastore.adapters.api.dto;
 import no.microdata.datastore.exceptions.BadRequestException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ public class InputTimePeriodQueryTest {
 
     Credentials credentials;
 
-    @BeforeAll
+    @BeforeEach
     void setup(){
         credentials = new Credentials();
         credentials.setUsername(Credentials.VALID_USERNAME);
