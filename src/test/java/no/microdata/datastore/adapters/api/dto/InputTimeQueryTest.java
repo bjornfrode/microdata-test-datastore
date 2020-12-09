@@ -96,7 +96,7 @@ public class InputTimeQueryTest {
         String expected = "{ dataStructureName: KJONN, date: 1259649003000, version: 1.1.0.0 }";
         String actual = inputQuery.toString();
 
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 
     @DisplayName("should return toString() with all properties")
