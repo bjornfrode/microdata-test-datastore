@@ -86,39 +86,6 @@ include::{snippets}/metadata-api-getDataStore/response-headers.adoc[]
 
 include::{snippets}/metadata-api-getDataStore/http-response.adoc[]
 
-
-[[resources-datastore]]
-=== Retrieve data structure version
-
-This endpoint receives a request with data structure name and the conceptual datastore version and
-returns the actual version for the data structure. +
-The version of the data structure will always be equal or lower to the datastore version. +
-The endpoint will return an empty json if the operationType for this data structure version is 'REMOVE'.
-
-==== Request path parameters
-
-include::{snippets}/getDatastructureVersion/request-parameters.adoc[]
-
-==== Request headers
-
-include::{snippets}/getDatastructureVersion/request-headers.adoc[]
-
-==== Example request
-
-include::{snippets}/getDatastructureVersion/curl-request.adoc[]
-
-include::{snippets}/getDatastructureVersion/http-request.adoc[]
-
-==== Response structure
-
-include::{snippets}/getDatastructureVersion/response-fields.adoc[]
-
-==== Example response
-
-include::{snippets}/getDatastructureVersion/http-response.adoc[]
-
-
-
 == Datastructure
 The `Datastructure`resource.
 
@@ -148,36 +115,6 @@ include::{snippets}/getDataStructures/response-headers.adoc[]
 ==== Example response
 
 include::{snippets}/getDataStructures/http-response.adoc[]
-
-
-
-=== Retrieve current datastructure
-
-Gets current datastructure, no version is required.
-
-==== Request path parameters
-
-include::{snippets}/getCurrentDataStructures/request-parameters.adoc[]
-
-==== Request headers
-
-include::{snippets}/getCurrentDataStructures/request-headers.adoc[]
-
-
-==== Example request
-
-include::{snippets}/getCurrentDataStructures/curl-request.adoc[]
-include::{snippets}/getCurrentDataStructures/http-request.adoc[]
-
-==== Response headers
-
-include::{snippets}/getCurrentDataStructures/response-headers.adoc[]
-
-==== Example response
-
-include::{snippets}/getCurrentDataStructures/http-response.adoc[]
-
-
 
 
 == AllMetadata
