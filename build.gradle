@@ -1,13 +1,14 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-	id 'org.springframework.boot' version '2.4.0'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.4.0'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
     // Documentation :
     // https://github.com/statisticsnorway/ssb-developer-guide/blob/gradle-info/docs/azure_pipeline_doc.md#maven-repository-credentials-in-gradle
     id 'net.linguica.maven-settings' version '0.5'
     id 'org.owasp.dependencycheck' version '6.0.3'
+    id "org.asciidoctor.convert" version "1.5.9.2"
 }
 
 group = 'no.microdata.datastore'
@@ -34,17 +35,38 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'net.logstash.logback:logstash-logback-encoder:6.5'
-	implementation 'com.google.guava:guava:30.0-jre'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.msgpack:jackson-dataformat-msgpack:0.8.21'
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.5'
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
+    outputs.dir snippetsDir
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+
+
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
 }
 
 dependencyCheck {

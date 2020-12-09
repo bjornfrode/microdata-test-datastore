@@ -11,12 +11,8 @@ import java.util.Map;
 public class DataStructureServiceImpl implements DataStructureService {
 
     @Override
-    public List<Map> find(MetadataQuery query) {
+    public List<Map<String, Object>> find(MetadataQuery query) {
         return List.of(Map.of("key", "value"));
     }
 
-    @Override
-    public List<Map> findCurrent(MetadataQuery query) {
-        return List.of(Map.of("key", "value"));
-    }
 }

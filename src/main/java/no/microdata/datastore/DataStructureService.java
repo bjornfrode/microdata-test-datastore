@@ -7,7 +7,6 @@ import java.util.Map;
 
 public interface DataStructureService {
 
-    List<Map> find(MetadataQuery query);
-    List<Map> findCurrent(MetadataQuery query);
+    List<Map<String, Object>> find(MetadataQuery query);
 
 }
