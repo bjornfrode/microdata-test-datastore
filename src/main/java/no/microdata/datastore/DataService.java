@@ -1,4 +1,4 @@
-package no.microdata.datastore
+package no.microdata.datastore;
 
 import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.model.EventQuery;
