@@ -1,6 +1,7 @@
 package no.microdata.datastore.adapters.api;
 
 import com.google.common.base.Stopwatch;
+import no.microdata.datastore.DataService;
 import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.adapters.api.dto.InputFixedQuery;
 import no.microdata.datastore.adapters.api.dto.InputQuery;
@@ -111,6 +112,7 @@ class DataAPI {
             return dataStructure;
         } else {
             log.warn("Should not be possible to have invalid input without having a exception!");
+            throw new RuntimeException("Should not be possible");
         }
     }
 
@@ -178,6 +180,7 @@ class DataAPI {
             return dataStructure;
         } else {
             log.warn("Should not be possible to have invalid input without having a exception!");
+            throw new RuntimeException("Should not be possible");
         }
     }
 
@@ -238,19 +241,21 @@ class DataAPI {
             return dataStructure;
         } else {
             log.warn("Should not be possible to have invalid input without having a exception!");
+            throw new RuntimeException("Should not be possible");
         }
     }
 
     String getDataStructureVersion(DataStoreVersionQuery query){
         var response = dataService.getDataStructureVersion(query);
-        if (! response.datastructureName.equals(query.dataStructureName())) {
-            throw new RuntimeException("Query data structure name $query.dataStructureName does not match name " +
-                    "from metadata store $response.datastructureName");
+        if (! response.get("datastructureName").equals(query.dataStructureName())) {
+            throw new RuntimeException(
+                    String.format("Query data structure name %s does not match name from metadata store %s",
+                            query.dataStructureName(), response.get("datastructureName")));
         }
         log.info("{} : dataStore version {}, dataStructure version {}",
-                query.dataStructureName(), query.dataStoreVersion(), response.datastructureVersion);
+                query.dataStructureName(), query.dataStoreVersion(), response.get("datastructureVersion"));
 
-        return response.datastructureVersion;
+        return (String) response.get("datastructureVersion");
     }
 
     private static ValueFilter createValueFilter(InputQuery inputQuery) {
@@ -267,22 +272,22 @@ class DataAPI {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    ResponseEntity<String> handleBadRequestException(BadRequestException e) throws IOException {
+    ResponseEntity<String> handleBadRequestException(BadRequestException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    ResponseEntity<String> handleNotFoundException(NotFoundException e) throws IOException {
+    ResponseEntity<String> handleNotFoundException(NotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DataNotFoundException.class)
-    ResponseEntity<String> handleDataNotFoundException(DataNotFoundException e) throws IOException {
+    ResponseEntity<String> handleDataNotFoundException(DataNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) throws IOException {
+    ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

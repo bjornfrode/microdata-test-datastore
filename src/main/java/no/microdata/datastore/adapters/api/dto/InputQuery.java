@@ -1,7 +1,7 @@
 package no.microdata.datastore.adapters.api.dto;
 
-import no.microdata.datastore.adapters.api.BadRequestException;
-import no.microdata.datastore.adapters.api.UnauthorizedException;
+import no.microdata.datastore.exceptions.BadRequestException;
+import no.microdata.datastore.exceptions.UnauthorizedException;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,8 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static no.microdata.datastore.transformations.Utils.*;
-
-import static no.microdata.datastore.adapters.api.ErrorMessage.*;
 
 public abstract class InputQuery {
 

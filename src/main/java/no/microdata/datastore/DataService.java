@@ -8,7 +8,7 @@ import no.microdata.datastore.model.StatusQuery;
 
 import java.util.Map;
 
-interface DataService {
+public interface DataService {
 
     Map getEvent(MetadataQuery metadataQuery, EventQuery dataQuery);
     Map getStatus(MetadataQuery metadataQuery, StatusQuery dataQuery);
