@@ -40,6 +40,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.msgpack:jackson-dataformat-msgpack:0.8.21'
     implementation 'net.logstash.logback:logstash-logback-encoder:6.5'
+    implementation 'com.google.guava:guava:30.0-jre'
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
