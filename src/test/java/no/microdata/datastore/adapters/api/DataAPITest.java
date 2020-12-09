@@ -2,6 +2,7 @@ package no.microdata.datastore.adapters.api;
 
 import no.microdata.datastore.DataService;
 import no.microdata.datastore.MockApplication;
+import no.microdata.datastore.MockConfig;
 import no.microdata.datastore.adapters.api.dto.Credentials;
 import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.model.*;
@@ -26,9 +27,11 @@ import org.springframework.http.MediaType;
 //import org.springframework.restdocs.operation.preprocess.OperationPreprocessor;
 //import org.springframework.restdocs.operation.preprocess.Preprocessors;
 
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.headers.HeaderDocumentation;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.PayloadDocumentation;
@@ -42,55 +45,65 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT,classes = [MockApplication.class, MockConfig.class])
+@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT,classes = {MockApplication.class, MockConfig.class})
 public class DataAPITest {
 
-    public static final String CONTENT_TYPE_JSON = "application/json"
-    public static final String CONTENT_TYPE_MSGPACK = "application/x-msgpack"
-    public static final String REQUESTID_DESCRIPTION = 'The request id. Optional.'
-    public static final String DATASTRUCTURE_NAME_DESCRIPTION = 'The name of the data structure.'
-    public static final String ACCEPT_LANGUAGE_DESCRIPTION = 'ISO 639-1 language code. Optional.'
-    public static final String CONTENT_TYPE_DESCRIPTION = 'The content type of the request body. We expect "application/json".'
-    public static final String ACCEPT_DESCRIPTION = 'The API support both "application/json" and "application/x-msgpack"'
-    public static final String DATASTORE_VERSION = '1.1.0.0'
-    public static final String DATASTRUCTURE_VERSION = '1.0.0.0'
-    public static final String VERSION_DESCRIPTION = 'The version of the datastore.'
-    public static final String VALUE_FILTER_DESCRIPTION = "The value filter. It is a collection of Strings"
-    public static final String POPULATION_DESCRIPTION = "The population filter. It is an object with a key named 'unitIds' where the value is an array of unit IDs."
-    public static final String POPULATION_UNITIDS_DESCRIPTION = "The unit ids in the population."
+    public static final String CONTENT_TYPE_JSON = "application/json";
+    public static final String CONTENT_TYPE_MSGPACK = "application/x-msgpack";
+    public static final String REQUESTID_DESCRIPTION = "The request id. Optional.";
+    public static final String DATASTRUCTURE_NAME_DESCRIPTION = "The name of the data structure.";
+    public static final String ACCEPT_LANGUAGE_DESCRIPTION = "ISO 639-1 language code. Optional.";
+    public static final String CONTENT_TYPE_DESCRIPTION = "The content type of the request body. We expect \"application/json\".";
+    public static final String ACCEPT_DESCRIPTION = "The API support both \"application/json\" and \"application/x-msgpack\"";
+    public static final String DATASTORE_VERSION = "1.1.0.0";
+    public static final String DATASTRUCTURE_VERSION = "1.0.0.0";
+    public static final String VERSION_DESCRIPTION = "The version of the datastore.";
+    public static final String VALUE_FILTER_DESCRIPTION = "The value filter. It is a collection of Strings";
+    public static final String POPULATION_DESCRIPTION = "The population filter. It is an object with a key named 'unitIds' where the value is an array of unit IDs.";
+    public static final String POPULATION_UNITIDS_DESCRIPTION = "The unit ids in the population.";
     public static final String INTERVALFILTER_DESCRIPTION = "An interval of integers between 0 and 999. Format: '[10, 100]'. This can be used by the http client in order to" +
-                                                            " run parallel requests.  Optional."
-    public static final String INCLUDE_ATTRIBUTES_DESCRIPTION = "No attributes will be returned if 'includeAttributes' is false or not provided. Optional."
-    public static final String CREDENTIALS_USERNAME = "The username"
-    public static final String CREDENTIALS_PASSWORD = "The password"
-    public static final Map AUTHENTICATION_FAILURE = [type: "AUTHENTICATION_FAILURE", code: 104, service: "data-store", message:"Wrong username or password"]
-    public static final Map REQUEST_VALIDATION_ERROR = [code:101, service: "data-store", type: "REQUEST_VALIDATION_ERROR", message: "child \"version\" fails because [\"version\" is required]"]
+                                                            " run parallel requests.  Optional.";
+    public static final String INCLUDE_ATTRIBUTES_DESCRIPTION = "No attributes will be returned if 'includeAttributes' is false or not provided. Optional.";
+    public static final String CREDENTIALS_USERNAME = "The username";
+    public static final String CREDENTIALS_PASSWORD = "The password";
+    public static final Map AUTHENTICATION_FAILURE = Map.of(
+                                                            "type", "AUTHENTICATION_FAILURE",
+                                                            "code", 104,
+                                                            "service", "data-store",
+                                                            "message", "Wrong username or password"
+                                                        );
+    public static final Map REQUEST_VALIDATION_ERROR = Map.of(
+                                                            "code", 101,
+                                                            "service", "data-store",
+                                                            "type", "REQUEST_VALIDATION_ERROR",
+                                                            "message", "child \"version\" fails because [\"version\" is required]"
+                                                        );
 
-    @Rule
-    public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");
-
-    DataService dataService
+    private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext webApplicationContext
 
-    private MockMvc mockMvc;
+    DataService dataService;
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    public void setUp(WebApplicationContext webApplicationContext,
+                      RestDocumentationContextProvider restDocumentation) {
+
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(MockMvcRestDocumentation.documentationConfiguration(this.restDocumentation).uris()
-                .withScheme("http")
-                .withHost("al-microdata-app2-utv")
-                .withPort(8084))
-                .build()
-        dataService = (DataService) webApplicationContext.getBean("dataService")
-        reset(dataService)
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
+
+        dataService = (DataService) webApplicationContext.getBean("dataService");
+        reset(dataService);
     }
 
     @Test
