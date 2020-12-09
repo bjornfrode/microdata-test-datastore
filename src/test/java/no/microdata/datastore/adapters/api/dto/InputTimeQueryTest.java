@@ -1,6 +1,8 @@
 package no.microdata.datastore.adapters.api.dto;
 
+import no.microdata.datastore.adapters.api.ErrorMessage;
 import no.microdata.datastore.exceptions.BadRequestException;
+import no.microdata.datastore.exceptions.MicrodataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,12 +44,13 @@ public class InputTimeQueryTest {
         inputQuery.setDate(1259649003000L);
         inputQuery.setCredentials(credentials);
 
-        assertThrows(BadRequestException.class, () -> {
+        Throwable exceptionThatWasThrown = assertThrows(BadRequestException.class, () -> {
             inputQuery.validate();
         });
 
-        // Hvordan kan vi teste innholdet i exception?
-//        e.errorMessage == requestValidationError(INPUT_FIELD_DATASTRUCTURE_NAME)
+        String expected = MicrodataException.toJsonString(
+                ErrorMessage.requestValidationError(ErrorMessage.INPUT_FIELD_DATASTRUCTURE_NAME));
+        assertEquals(expected, exceptionThatWasThrown.getMessage());
     }
 
     @DisplayName("should NOT validate when required field start is missing")
@@ -58,13 +61,13 @@ public class InputTimeQueryTest {
         inputQuery.setVersion("1.1.0.0");
         inputQuery.setCredentials(credentials);
 
-        assertThrows(BadRequestException.class, () -> {
+        Throwable exceptionThatWasThrown = assertThrows(BadRequestException.class, () -> {
             inputQuery.validate();
         });
 
-        // Hvordan kan vi teste innholdet i exception?
-//        e.errorMessage == requestValidationError(INPUT_FIELD_START_DATE)
-
+        String expected = MicrodataException.toJsonString(
+                ErrorMessage.requestValidationError(ErrorMessage.INPUT_FIELD_START_DATE));
+        assertEquals(expected, exceptionThatWasThrown.getMessage());
     }
 
     @DisplayName("should NOT validate when version is not 4 level numeric version")
@@ -76,13 +79,12 @@ public class InputTimeQueryTest {
         inputQuery.setVersion("1.1.0");
         inputQuery.setCredentials(credentials);
 
-        assertThrows(BadRequestException.class, () -> {
+        Throwable exceptionThatWasThrown = assertThrows(BadRequestException.class, () -> {
             inputQuery.validate();
         });
 
-        // Hvordan kan vi teste innholdet i exception?
-//        e.errorMessage == versionValidationError(version)
-
+        String expected = MicrodataException.toJsonString(ErrorMessage.versionValidationError("1.1.0"));
+        assertEquals(expected, exceptionThatWasThrown.getMessage());
     }
 
     @DisplayName("should return toString() with required properties")
@@ -93,10 +95,11 @@ public class InputTimeQueryTest {
         inputQuery.setDate(1259649003000L);
         inputQuery.setCredentials(credentials);
 
-        String expected = "{ dataStructureName: KJONN, date: 1259649003000, version: 1.1.0.0 }";
+        String expected = "InputTimeQuery[date=1259649003000, dataStructureName='KJONN', version='null', " +
+                "values=null, population=0, intervalFilter='null', includeAttributes=null]";
         String actual = inputQuery.toString();
 
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @DisplayName("should return toString() with all properties")
@@ -116,10 +119,11 @@ public class InputTimeQueryTest {
         inputQuery.setIncludeAttributes(true);
         inputQuery.setCredentials(credentials);
 
-        String expected = "{ dataStructureName: KJONN, date: 1259649003000, version: 1.1.0.0, values.size(): 3, " +
-                            "population filter size: 3, interval filter: [0, 100], includeAttributes: true }";
+        String expected = "InputTimeQuery[date=1259649003000, dataStructureName='KJONN', version='1.1.0.0', values=3, " +
+                "population=3, intervalFilter='[0, 100]', includeAttributes=true]";
+
         String actual = inputQuery.toString();
 
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 }

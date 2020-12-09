@@ -49,7 +49,7 @@ public abstract class InputQuery {
     }
 
     public Set<Long> populationFilter(){
-        return population.getOrDefault("unitIds", new HashSet<Long>());
+        return population == null ? new HashSet<Long>() : population.getOrDefault("unitIds", new HashSet<Long>());
     }
 
     private static final String SEMVER_REG_EXP = "^([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)$";

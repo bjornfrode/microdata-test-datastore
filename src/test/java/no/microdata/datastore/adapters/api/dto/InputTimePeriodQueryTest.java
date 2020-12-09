@@ -1,12 +1,14 @@
 package no.microdata.datastore.adapters.api.dto;
 
+import no.microdata.datastore.adapters.api.ErrorMessage;
 import no.microdata.datastore.exceptions.BadRequestException;
+import no.microdata.datastore.exceptions.MicrodataException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InputTimePeriodQueryTest {
@@ -57,12 +59,13 @@ public class InputTimePeriodQueryTest {
         inputQuery.setStopDate(1346394603000L);
         inputQuery.setCredentials(credentials);
 
-        Assertions.assertThrows(BadRequestException.class, () -> {
+        Throwable exceptionThatWasThrown = Assertions.assertThrows(BadRequestException.class, () -> {
             inputQuery.validate();
         });
 
-        // Hvordan kan vi teste innholdet i exception?
-//        e.errorMessage == requestValidationError(INPUT_FIELD_DATASTRUCTURE_NAME)
+        String expected = MicrodataException.toJsonString(
+                ErrorMessage.requestValidationError(ErrorMessage.INPUT_FIELD_DATASTRUCTURE_NAME));
+        assertEquals(expected, exceptionThatWasThrown.getMessage());
     }
 
     @DisplayName("should NOT validate when required field start is missing")
@@ -74,13 +77,13 @@ public class InputTimePeriodQueryTest {
         inputQuery.setVersion("1.1.0.0");
         inputQuery.setCredentials(credentials);
 
-        Assertions.assertThrows(BadRequestException.class, () -> {
+        Throwable exceptionThatWasThrown = Assertions.assertThrows(BadRequestException.class, () -> {
             inputQuery.validate();
         });
 
-        // Hvordan kan vi teste innholdet i exception?
-//        e.errorMessage == requestValidationError(INPUT_FIELD_START_DATE)
-
+        String expected = MicrodataException.toJsonString(
+                ErrorMessage.requestValidationError(ErrorMessage.INPUT_FIELD_START_DATE));
+        assertEquals(expected, exceptionThatWasThrown.getMessage());
     }
 
     @DisplayName("should NOT validate when required field end is missing")
@@ -92,13 +95,13 @@ public class InputTimePeriodQueryTest {
         inputQuery.setVersion("1.1.0.0");
         inputQuery.setCredentials(credentials);
 
-        Assertions.assertThrows(BadRequestException.class, () -> {
+        Throwable exceptionThatWasThrown = Assertions.assertThrows(BadRequestException.class, () -> {
             inputQuery.validate();
         });
 
-        // Hvordan kan vi teste innholdet i exception?
-//        e.errorMessage == requestValidationError(INPUT_FIELD_STOP_DATE)
-
+        String expected = MicrodataException.toJsonString(
+                ErrorMessage.requestValidationError(ErrorMessage.INPUT_FIELD_STOP_DATE));
+        assertEquals(expected, exceptionThatWasThrown.getMessage());
     }
 
     @DisplayName("should NOT validate when version is not 4 level numeric version")
@@ -111,12 +114,12 @@ public class InputTimePeriodQueryTest {
         inputQuery.setVersion("1.1.0");
         inputQuery.setCredentials(credentials);
 
-        Assertions.assertThrows(BadRequestException.class, () -> {
+        Throwable exceptionThatWasThrown = Assertions.assertThrows(BadRequestException.class, () -> {
             inputQuery.validate();
         });
 
-        // Hvordan kan vi teste innholdet i exception?
-//        e.errorMessage == versionValidationError(version)
-
+        String expected = MicrodataException.toJsonString(
+                ErrorMessage.versionValidationError("1.1.0"));
+        assertEquals(expected, exceptionThatWasThrown.getMessage());
     }
 }

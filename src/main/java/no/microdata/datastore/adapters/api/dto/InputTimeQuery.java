@@ -4,6 +4,8 @@ import no.microdata.datastore.exceptions.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.StringJoiner;
+
 import static no.microdata.datastore.transformations.Utils.*;
 
 public class InputTimeQuery extends InputQuery{
@@ -25,23 +27,17 @@ public class InputTimeQuery extends InputQuery{
     }
 
 
-
     @Override
-    public String toString(){
-        String string = String.format("{ dataStructureName: %1$s, date: %2$d, version: %3$s", dataStructureName, date, version);
-        if(hasValueFilter()){
-            string.concat(String.format(", values.size(): %1$d", values.size()));
-        }
-        if(hasUnitIdFilter()){
-            string.concat(String.format(", population filter size:  %1$d", populationFilter().size()));
-        }
-        if (hasIntervalFilter()){
-            string.concat(String.format(", interval filter: %1$s", intervalFilter));
-        }
-        if (includeAttributes){
-            string.concat(String.format(", includeAttributes: %1$b", includeAttributes));
-        }
-        return string.concat(" }");
+    public String toString() {
+        return new StringJoiner(", ", InputTimeQuery.class.getSimpleName() + "[", "]")
+                .add("date=" + date)
+                .add("dataStructureName='" + dataStructureName + "'")
+                .add("version='" + version + "'")
+                .add("values=" + (values!=null ? values.size() : "null"))
+                .add("population=" + populationFilter().size())
+                .add("intervalFilter='" + intervalFilter + "'")
+                .add("includeAttributes=" + includeAttributes)
+                .toString();
     }
 
     public Long getDate() {
