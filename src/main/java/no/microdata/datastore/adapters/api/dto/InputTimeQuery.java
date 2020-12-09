@@ -1,12 +1,10 @@
 package no.microdata.datastore.adapters.api.dto;
 
-import no.microdata.datastore.adapters.api.BadRequestException;
+import no.microdata.datastore.exceptions.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static no.microdata.datastore.transformations.Utils.*;
-
-//import static no.microdata.datastore.adapters.api.ErrorMessage.*;
 
 public class InputTimeQuery extends InputQuery{
 

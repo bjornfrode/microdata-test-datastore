@@ -47,11 +47,16 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
+tasks.withType(JavaCompile).each {
+    it.options.compilerArgs.add('--enable-preview')
+}
+
 ext {
     snippetsDir = file('build/generated-snippets')
 }
 
 test {
+    jvmArgs(['--enable-preview'])
     useJUnitPlatform()
     outputs.dir snippetsDir
 }
@@ -62,8 +67,6 @@ bootJar {
         into 'static/docs'
     }
 }
-
-
 
 asciidoctor {
     inputs.dir snippetsDir
