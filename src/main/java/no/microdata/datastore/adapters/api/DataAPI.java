@@ -13,6 +13,7 @@ import no.microdata.datastore.exceptions.NotFoundException;
 import no.microdata.datastore.exceptions.UnauthorizedException;
 import no.microdata.datastore.model.DatasetRevision;
 import no.microdata.datastore.model.EventQuery;
+import no.microdata.datastore.model.FixedQuery;
 import no.microdata.datastore.model.IntervalFilter;
 import no.microdata.datastore.model.MetadataQuery;
 import no.microdata.datastore.model.StatusQuery;
@@ -215,13 +216,15 @@ class DataAPI {
             DatasetRevision datasetRevision =
                     new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
-            FixedQuery fixedQuery = new FixedQuery( datasetRevision: datasetRevision,
-                    requestId: requestId,
-                    valueFilter: createValueFilter(inputFixedQuery),
-                    unitIdFilter:  createUnitIdFilter(inputFixedQuery),
-                    intervalFilter: createIntervalFilter(inputFixedQuery),
-                    // includeAttributes: inputFixedQuery.includeAttributes) ??
-                    includeAttributes: false);
+            FixedQuery fixedQuery = new FixedQuery(
+                    Map.of(
+                            "datasetRevision",  datasetRevision,
+                            "requestId", requestId,
+                            "valueFilter", createValueFilter(inputFixedQuery),
+                            "unitIdFilter",  createUnitIdFilter(inputFixedQuery),
+                            "intervalFilter", createIntervalFilter(inputFixedQuery),
+                            "includeAttributes", false
+                    ));
 
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
