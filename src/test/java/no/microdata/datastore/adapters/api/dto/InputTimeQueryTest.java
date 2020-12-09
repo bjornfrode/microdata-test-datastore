@@ -1,7 +1,7 @@
 package no.microdata.datastore.adapters.api.dto;
 
 import no.microdata.datastore.exceptions.BadRequestException;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -9,14 +9,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InputTimeQueryTest {
 
     Credentials credentials;
 
-    @BeforeAll
+    @BeforeEach
     void setup(){
         credentials = new Credentials();
         credentials.setUsername(Credentials.VALID_USERNAME);
@@ -121,6 +120,6 @@ public class InputTimeQueryTest {
                             "population filter size: 3, interval filter: [0, 100], includeAttributes: true }";
         String actual = inputQuery.toString();
 
-        assertTrue(actual.equals(expected));
+        assertEquals(actual, expected);
     }
 }
