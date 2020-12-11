@@ -1,5 +1,12 @@
 package no.microdata.datastore.services;
 
+import org.apache.parquet.HadoopReadOptions;
+import org.apache.parquet.ParquetReadOptions;
+import org.apache.parquet.filter2.compat.FilterCompat;
+import org.apache.parquet.filter2.predicate.FilterPredicate;
+import org.apache.parquet.filter2.predicate.Operators;
+import org.apache.parquet.hadoop.util.HadoopInputFile;
+import org.apache.parquet.io.api.Binary;
 import org.junit.jupiter.api.Test;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -15,7 +22,11 @@ import org.apache.parquet.io.RecordReader;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.Type;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+
+import static org.apache.parquet.filter2.predicate.FilterApi.*;
 
 public class ParquetServiceTest {
 
@@ -54,20 +65,100 @@ public class ParquetServiceTest {
 
     }
 
+    @Test
+    void readUsingNewerAPIs() throws IOException {
+        File f = Paths.get("src/test/resources/no_ssb_test_datastore/dataset/TEST_PERSON_INCOME/TEST_PERSON_INCOME__1_0.parquet").toFile();
+        final Path path = new Path(f.toURI());
+        final HadoopInputFile hif = HadoopInputFile.fromPath(path, new Configuration());
+        final ParquetReadOptions opts = HadoopReadOptions.builder(hif.getConfiguration())
+                .withMetadataFilter(ParquetMetadataConverter.NO_FILTER).build();
+
+        try (final ParquetFileReader r = ParquetFileReader.open(hif, opts))
+        {
+            final ParquetMetadata readFooter = r.getFooter();
+            final MessageType schema = readFooter.getFileMetaData().getSchema();
+
+            while (true)
+            {
+                final PageReadStore pages = r.readNextRowGroup();
+
+                if (pages == null)
+                    return;
+
+                final long rows = pages.getRowCount();
+
+                System.out.println("Number of rows: " + rows);
+
+                final MessageColumnIO columnIO = new ColumnIOFactory().getColumnIO(schema);
+                final RecordReader recordReader = columnIO.getRecordReader(pages, new GroupRecordConverter(schema));
+                for (int i = 0; i < rows; i++)
+                {
+                    final Group g = (Group) recordReader.read();
+                    //System.out.println(g);
+                    printGroup(g);
+                }
+            }
+        }
+    }
+
+    //value == 51000
+    @Test
+    void filterUsingNewerAPIs() throws IOException {
+        File f = Paths.get("src/test/resources/no_ssb_test_datastore/dataset/TEST_PERSON_INCOME/TEST_PERSON_INCOME__1_0.parquet").toFile();
+        final Path path = new Path(f.toURI());
+        final HadoopInputFile hif = HadoopInputFile.fromPath(path, new Configuration());
+        final ParquetReadOptions opts = HadoopReadOptions.builder(hif.getConfiguration())
+                .withMetadataFilter(ParquetMetadataConverter.NO_FILTER).build();
+
+        Operators.BinaryColumn value = binaryColumn("value");
+
+        FilterPredicate filterPredicate = eq(value, Binary.fromString("51000"));
+
+        try (final ParquetFileReader r = ParquetFileReader.open(hif, opts))
+        {
+            final ParquetMetadata readFooter = r.getFooter();
+            final MessageType schema = readFooter.getFileMetaData().getSchema();
+
+            while (true)
+            {
+                final PageReadStore pages = r.readNextRowGroup();
+
+                if (pages == null)
+                    return;
+
+                final long rows = pages.getRowCount();
+
+                System.out.println("Number of rows: " + rows);
+
+                final MessageColumnIO columnIO = new ColumnIOFactory().getColumnIO(schema);
+                final RecordReader recordReader = columnIO.getRecordReader(pages, new GroupRecordConverter(schema), FilterCompat.get(filterPredicate));
+                for (int i = 0; i < rows; i++)
+                {
+                    final Group g = (Group) recordReader.read();
+                    System.out.println(g);
+                }
+            }
+        }
+    }
+
     private static void printGroup(Group g) {
-        int fieldCount = g.getType().getFieldCount();
-        for (int field = 0; field < fieldCount; field++) {
-            int valueCount = g.getFieldRepetitionCount(field);
+        final int fieldCount = g.getType().getFieldCount();
 
-            Type fieldType = g.getType().getType(field);
-            String fieldName = fieldType.getName();
+        for (int field = 0; field < fieldCount; field++)
+        {
+            final int valueCount = g.getFieldRepetitionCount(field);
+            final Type fieldType = g.getType().getType(field);
+            final String fieldName = fieldType.getName();
 
-            for (int index = 0; index < valueCount; index++) {
-                if (fieldType.isPrimitive()) {
+            for (int index = 0; index < valueCount; index++)
+            {
+                if (fieldType.isPrimitive())
+                {
                     System.out.println(fieldName + " " + g.getValueToString(field, index));
                 }
             }
         }
+
         System.out.println("");
     }
 

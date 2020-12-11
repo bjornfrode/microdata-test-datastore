@@ -53,23 +53,23 @@ class WebMvcConfig implements WebMvcConfigurer {
                 long startTime = (long) threadLocal.get();
                 String timeUsed = startTime == 0 ? null : ("" + (System.currentTimeMillis() - startTime));
 
-                String xRequestId = response.getHeader(X_REQUEST_ID);
-                String method = MDC.get("method") != null ? MDC.get("method") : request.getMethod().toUpperCase();
-                String url = MDC.get("url") != null ? MDC.get("url") : request.getRequestURI();
-                String statusCode = "" + response.getStatus();
-
-                MDC.put("statusCode", statusCode);
-                MDC.put("responseTime", timeUsed);
-                MDC.put("xRequestId", xRequestId);
-
-                String message = String.format("Response for %s %s was %s", method, url, statusCode);
-                if (statusCode.startsWith("1") || statusCode.startsWith("2") || statusCode.startsWith("3")) {
-                    log.info(message);
-                } else if (statusCode.startsWith("4")) {
-                    log.warn(message);
-                } else {
-                    log.error(message);
-                }
+//                String xRequestId = response.getHeader(X_REQUEST_ID);
+//                String method = MDC.get("method") != null ? MDC.get("method") : request.getMethod().toUpperCase();
+//                String url = MDC.get("url") != null ? MDC.get("url") : request.getRequestURI();
+//                String statusCode = "" + response.getStatus();
+//
+//                MDC.put("statusCode", statusCode);
+//                MDC.put("responseTime", timeUsed);
+//                MDC.put("xRequestId", xRequestId);
+//
+//                String message = String.format("Response for %s %s was %s", method, url, statusCode);
+//                if (statusCode.startsWith("1") || statusCode.startsWith("2") || statusCode.startsWith("3")) {
+//                    log.info(message);
+//                } else if (statusCode.startsWith("4")) {
+//                    log.warn(message);
+//                } else {
+//                    log.error(message);
+//                }
 
                 MDC.clear();
                 threadLocal.set(null);
