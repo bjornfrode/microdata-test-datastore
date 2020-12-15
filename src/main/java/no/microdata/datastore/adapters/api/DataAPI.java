@@ -2,7 +2,6 @@ package no.microdata.datastore.adapters.api;
 
 import com.google.common.base.Stopwatch;
 import no.microdata.datastore.DataService;
-import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.adapters.api.dto.InputFixedQuery;
 import no.microdata.datastore.adapters.api.dto.InputQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimePeriodQuery;
@@ -22,7 +21,6 @@ import no.microdata.datastore.model.UnitIdFilter;
 import no.microdata.datastore.model.ValueFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;

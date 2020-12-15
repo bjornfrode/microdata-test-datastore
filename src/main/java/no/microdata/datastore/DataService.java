@@ -1,6 +1,5 @@
 package no.microdata.datastore;
 
-import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.model.EventQuery;
 import no.microdata.datastore.model.FixedQuery;
 import no.microdata.datastore.model.MetadataQuery;
