@@ -95,14 +95,15 @@ public class SqlLiteRepositoryTest {
             System.out.println("Done inserting " + rowNo + " rows in " + (System.currentTimeMillis() - startStopwatch) + "ms");
 
             ResultSet rs = statement.executeQuery("select * from BEFOLKNING_HUSHNR__4_0");
+            startStopwatch = System.currentTimeMillis();
             System.out.println("Reading first 10 rows:");
-            for (int i = 0; i < 10; i++) {
-            //while(rs.next())
-                rs.next();
-                System.out.println("unit_id = " + rs.getInt("unit_id"));
-                System.out.println("value = " + rs.getString("value"));
-                System.out.println("start = " + rs.getInt("start") + " as date = " + rs.getDate("start"));
+            //for (int i = 0; i < rowNo; i++) {
+            while(rs.next()) {
+//                System.out.println("unit_id = " + rs.getInt("unit_id"));
+//                System.out.println("value = " + rs.getString("value"));
+//                System.out.println("start = " + rs.getInt("start") + " as date = " + rs.getDate("start"));
             }
+            System.out.println("Done reading " + rowNo + " rows in " + (System.currentTimeMillis() - startStopwatch) + "ms");
         }
         catch(SQLException e)
         {

@@ -50,8 +50,11 @@ class DataAPI {
 
     private final static Logger log = LoggerFactory.getLogger(DataAPI.class);
 
-    @Autowired
-    private DataService dataService;
+    private final DataService dataService;
+
+    public DataAPI(DataService dataService) {
+        this.dataService = dataService;
+    }
 
     @RequestMapping(value = "/data/data-structure/event", method = RequestMethod.POST)
     Map getEvent(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
@@ -247,7 +250,7 @@ class DataAPI {
 
     String getDataStructureVersion(DataStoreVersionQuery query){
         var response = dataService.getDataStructureVersion(query);
-        if (! response.get("datastructureName").equals(query.dataStructureName())) {
+        if (! Objects.equals(response.get("datastructureName"), query.dataStructureName())) {
             throw new RuntimeException(
                     String.format("Query data structure name %s does not match name from metadata store %s",
                             query.dataStructureName(), response.get("datastructureName")));

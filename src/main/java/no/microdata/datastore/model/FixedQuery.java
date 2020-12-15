@@ -42,6 +42,26 @@ public class FixedQuery {
         return unitIdFilter.unitIds().size() > 0;
     }
 
+    public UnitIdFilter getUnitIdFilter() {
+        return unitIdFilter;
+    }
+
+    public Boolean getIncludeAttributes() {
+        return includeAttributes;
+    }
+
+    public DatasetRevision getDatasetRevision() {
+        return datasetRevision;
+    }
+
+    public IntervalFilter getIntervalFilter() {
+        return intervalFilter;
+    }
+
+    public ValueFilter getValueFilter() {
+        return valueFilter;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", FixedQuery.class.getSimpleName() + "[", "]")

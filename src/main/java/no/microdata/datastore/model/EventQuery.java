@@ -53,6 +53,34 @@ public class EventQuery {
         return unitIdFilter.unitIds().size() > 0;
     }
 
+    public UnitIdFilter getUnitIdFilter() {
+        return unitIdFilter;
+    }
+
+    public Boolean getIncludeAttributes() {
+        return includeAttributes;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public DatasetRevision getDatasetRevision() {
+        return datasetRevision;
+    }
+
+    public IntervalFilter getIntervalFilter() {
+        return intervalFilter;
+    }
+
+    public ValueFilter getValueFilter() {
+        return valueFilter;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", EventQuery.class.getSimpleName() + "[", "]")

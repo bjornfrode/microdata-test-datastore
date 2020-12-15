@@ -9,11 +9,11 @@ public record ValueFilter (Set<String> valueFilter){
         return new ValueFilter(new HashSet<String>());
     }
 
-    boolean hasValues(){
+    public boolean hasValues(){
         return this.valueFilter.size() > 0;
     }
 
-    long size(){
+    public long size(){
         return this.valueFilter.size();
     }
 }

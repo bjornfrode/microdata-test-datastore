@@ -26,6 +26,14 @@ public class DatasetRevision {
         return !Strings.isNullOrEmpty(datasetName) && !Strings.isNullOrEmpty(version);
     }
 
+    public String getDatasetName() {
+        return datasetName;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public String toString() {
         return "DatasetRevision["
