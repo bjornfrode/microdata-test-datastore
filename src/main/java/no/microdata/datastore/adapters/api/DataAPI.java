@@ -2,6 +2,7 @@ package no.microdata.datastore.adapters.api;
 
 import com.google.common.base.Stopwatch;
 import no.microdata.datastore.DataService;
+import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.adapters.api.dto.InputFixedQuery;
 import no.microdata.datastore.adapters.api.dto.InputQuery;
 import no.microdata.datastore.adapters.api.dto.InputTimePeriodQuery;

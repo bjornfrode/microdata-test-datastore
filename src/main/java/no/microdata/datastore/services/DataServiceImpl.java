@@ -3,6 +3,7 @@ package no.microdata.datastore.services;
 import com.google.common.base.Stopwatch;
 import no.microdata.datastore.DataService;
 import no.microdata.datastore.adapters.MetadataAdapter;
+import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.model.*;
 import no.microdata.datastore.repository.DatumRepository;
 import no.microdata.datastore.transformations.DataMappingFunctions;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 class DataServiceImpl implements DataService {
@@ -70,18 +72,35 @@ class DataServiceImpl implements DataService {
 
     @Override
     public Map getFixed(MetadataQuery metadataQuery, FixedQuery fixedQuery) {
-        log.debug("Entering getFixed() with metadata query = $metadataQuery and data query = $fixedQuery");
+        log.debug("Entering getFixed() with metadata query = {} and data query = {}", metadataQuery, fixedQuery);
 
-        return Map.of(
-                "getFixed", "dummy"
-        );
+        final Stopwatch firstTimer = Stopwatch.createStarted();
+        final Stopwatch secondTimer = Stopwatch.createStarted();
+        final Stopwatch thirdTimer = Stopwatch.createStarted();
+        final Stopwatch fourthTimer = Stopwatch.createStarted();
+
+        Map dataStructures = metadataAdapter.getDataStructure(metadataQuery);
+        log.info("Call to metadataAdapter.getDataStructure consumed {} miliseconds.",
+                secondTimer.stop().elapsed(TimeUnit.MILLISECONDS));
+
+        Collection<Datum> datums = repository.findByFixed(fixedQuery);
+        SplitDatums splitDatums = createSplitDatums(datums, fixedQuery.getIncludeAttributes());
+        log.info("Call to dataAdapter.getFixed consumed {} miliseconds.", thirdTimer.stop().elapsed(TimeUnit.MILLISECONDS));
+
+        Map dataStructure = DataMappingFunctions.addDatumsToDataStructure(dataStructures, splitDatums,
+                fixedQuery.getIncludeAttributes());
+
+        log.info("Call to DataMappingFunctions.addDatumsToDataStructure consumed {} miliseconds.",
+                fourthTimer.stop().elapsed(TimeUnit.MILLISECONDS));
+
+        log.info("Leaving getFixed with total elapsed time : {} seconds.", firstTimer.stop().elapsed(TimeUnit.SECONDS));
+
+        return dataStructure;
     }
 
     @Override
     public Map getDataStructureVersion(DataStoreVersionQuery query) {
-        return Map.of(
-                "getDataStructureVersion", "dummy"
-        );
+        return metadataAdapter.getDataStructureVersion(query);
     }
 
     private SplitDatums createSplitDatums(Collection<Datum> datums, Boolean includeAttributes) {
