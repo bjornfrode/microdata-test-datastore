@@ -1,6 +1,6 @@
 package no.microdata.datastore.model;
 
-enum Datatype {
+public enum Datatype {
 
     LONG("Long"),
     STRING("String"),

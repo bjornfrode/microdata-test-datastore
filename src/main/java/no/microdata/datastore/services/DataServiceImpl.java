@@ -5,6 +5,7 @@ import no.microdata.datastore.DataService;
 import no.microdata.datastore.adapters.MetadataAdapter;
 import no.microdata.datastore.model.*;
 import no.microdata.datastore.repository.DatumRepository;
+import no.microdata.datastore.transformations.DataMappingFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,21 +41,21 @@ class DataServiceImpl implements DataService {
                 "${secondTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.");
 
         Collection<Datum> datums = repository.findByTimePeriod(eventQuery);
-        SplitDatums splitDatums = createSplitDatums(datums, eventQuery.includeAttributes);
+        SplitDatums splitDatums = createSplitDatums(datums, eventQuery.getIncludeAttributes());
         log.info("Call to repository.getEvent consumed " +
-                "${thirdTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.")
+                "${thirdTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.");
 
         Map dataStructure = DataMappingFunctions.addDatumsToDataStructure(dataStructures, splitDatums,
-                eventQuery.includeAttributes)
+                eventQuery.getIncludeAttributes());
 
         log.info("Call to DataMappingFunctions.addDatumsToDataStructure consumed " +
-                "${fourthTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.")
+                "${fourthTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.");
 
-        log.debug("Found datastructure with name = ${dataStructure.name} that has ${splitDatums.ids.size()} datums")
+        log.debug("Found datastructure with name = ${dataStructure.name} that has ${splitDatums.ids.size()} datums");
         log.info("Leaving getEvent with total elapsed time : " +
-                "${firstTimer.stop().elapsed(TimeUnit.SECONDS)} seconds.")
+                "${firstTimer.stop().elapsed(TimeUnit.SECONDS)} seconds.");
 
-        dataStructure
+        return dataStructure;
 
     }
 
