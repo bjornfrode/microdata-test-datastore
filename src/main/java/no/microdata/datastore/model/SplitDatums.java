@@ -19,7 +19,7 @@ public class SplitDatums {
     List<LocalDate> startDates = new ArrayList<LocalDate>();
     List<LocalDate> stopDates = new ArrayList<LocalDate>();
 
-    SplitDatums(Map args) {
+    public SplitDatums(Map args) {
         ids = (List<Long>) args.get("ids");
         values = (List<String>) args.get("values");
 

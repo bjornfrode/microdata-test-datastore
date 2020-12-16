@@ -11,8 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -39,26 +41,26 @@ class DataServiceImpl implements DataService {
         final Stopwatch fourthTimer = Stopwatch.createStarted();
 
         Map dataStructures = metadataAdapter.getDataStructure(metadataQuery);
-        log.info("Call to metadataAdapter.getDataStructure consumed " +
-                "${secondTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.");
+        log.info("Call to metadataAdapter.getDataStructure consumed {} miliseconds.",
+                    secondTimer.stop().elapsed(TimeUnit.MILLISECONDS));
 
         Collection<Datum> datums = repository.findByTimePeriod(eventQuery);
         SplitDatums splitDatums = createSplitDatums(datums, eventQuery.getIncludeAttributes());
-        log.info("Call to repository.getEvent consumed " +
-                "${thirdTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.");
+        log.info("Call to repository.findByTimePeriod consumed {} miliseconds.",
+                    thirdTimer.stop().elapsed(TimeUnit.MILLISECONDS));
 
         Map dataStructure = DataMappingFunctions.addDatumsToDataStructure(dataStructures, splitDatums,
                 eventQuery.getIncludeAttributes());
+        log.info("Call to DataMappingFunctions.addDatumsToDataStructure consumed {} miliseconds.",
+                fourthTimer.stop().elapsed(TimeUnit.MILLISECONDS));
 
-        log.info("Call to DataMappingFunctions.addDatumsToDataStructure consumed " +
-                "${fourthTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.");
+        log.debug("Found datastructure with name = {} that has {}", dataStructure.get("name"), splitDatums.toString());
 
-        log.debug("Found datastructure with name = ${dataStructure.name} that has ${splitDatums.ids.size()} datums");
         log.info("Leaving getEvent with total elapsed time : " +
                 "${firstTimer.stop().elapsed(TimeUnit.SECONDS)} seconds.");
+        log.info("Leaving getEvent with total elapsed time : {} seconds.", firstTimer.stop().elapsed(TimeUnit.SECONDS));
 
         return dataStructure;
-
     }
 
     @Override
@@ -85,7 +87,7 @@ class DataServiceImpl implements DataService {
 
         Collection<Datum> datums = repository.findByFixed(fixedQuery);
         SplitDatums splitDatums = createSplitDatums(datums, fixedQuery.getIncludeAttributes());
-        log.info("Call to dataAdapter.getFixed consumed {} miliseconds.", thirdTimer.stop().elapsed(TimeUnit.MILLISECONDS));
+        log.info("Call to repository.findByFixed consumed {} miliseconds.", thirdTimer.stop().elapsed(TimeUnit.MILLISECONDS));
 
         Map dataStructure = DataMappingFunctions.addDatumsToDataStructure(dataStructures, splitDatums,
                 fixedQuery.getIncludeAttributes());
@@ -105,36 +107,36 @@ class DataServiceImpl implements DataService {
 
     private SplitDatums createSplitDatums(Collection<Datum> datums, Boolean includeAttributes) {
 
-        List<Long> ids = []
-        List<String> values = []
-        List<LocalDate> startDates = []
-        List<LocalDate> stopDates = []
+        List<Long> ids = new ArrayList<Long>();
+        List<String> values = new ArrayList<String>();
+        List<LocalDate> startDates = new ArrayList<LocalDate>();
+        List<LocalDate> stopDates = new ArrayList<LocalDate>();
 
-        // You may feel tempted to replace 'for (datum in datums)' with 'datums.each{}'
-        // This is strongly discouraged!
-        // For- loop is chosen deliberately because of better performance!
-        SplitDatums splitDatums
+
+        SplitDatums splitDatums;
         if (includeAttributes){
-            if (datums){
-                for (datum in datums){
-                    ids.add(datum.id)
-                    values.add(datum.value)
-                    startDates.add(datum.start)
-                    stopDates.add(datum.stop)
+            if (! CollectionUtils.isEmpty(datums)){
+                for (Datum datum : datums){
+                    ids.add(datum.getId());
+                    values.add(datum.getValue());
+                    startDates.add(datum.getStart());
+                    stopDates.add(datum.getStop());
                 }
             }
-            splitDatums = new SplitDatums([ids: ids, values: values, startDates: startDates, stopDates: stopDates])
+            splitDatums = new SplitDatums(Map.of("ids", ids,
+                                                "values", values,
+                                                "startDates", startDates,
+                                                "stopDates", stopDates));
         }else {
-            if (datums){
-                for (datum in datums){
-                    ids.add(datum.id)
-                    values.add(datum.value)
+            if (! CollectionUtils.isEmpty(datums)){
+                for (Datum datum : datums){
+                    ids.add(datum.getId());
+                    values.add(datum.getValue());
                 }
             }
-            splitDatums = new SplitDatums([ids: ids, values:values])
+            splitDatums = new SplitDatums(Map.of("ids", ids,
+                                                "values", values));
         }
-        splitDatums
+        return splitDatums;
     }
-
-
 }
