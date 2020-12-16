@@ -2,7 +2,7 @@ package no.microdata.datastore.services;
 
 import com.google.common.base.Stopwatch;
 import no.microdata.datastore.DataService;
-import no.microdata.datastore.adapters.MetadataAdapter;
+import no.microdata.datastore.MetadataService;
 import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.model.*;
 import no.microdata.datastore.repository.DatumRepository;
@@ -27,7 +27,7 @@ class DataServiceImpl implements DataService {
     DatumRepository repository;
 
     @Autowired
-    MetadataAdapter metadataAdapter;
+    MetadataService metadataService;
 
     @Override
     public Map getEvent(MetadataQuery metadataQuery, EventQuery eventQuery) {
@@ -38,7 +38,7 @@ class DataServiceImpl implements DataService {
         final Stopwatch thirdTimer = Stopwatch.createStarted();
         final Stopwatch fourthTimer = Stopwatch.createStarted();
 
-        Map dataStructures = metadataAdapter.getDataStructure(metadataQuery);
+        Map dataStructures = metadataService.getDataStructure(metadataQuery);
         log.info("Call to metadataAdapter.getDataStructure consumed " +
                 "${secondTimer.stop().elapsed(TimeUnit.MILLISECONDS)} miliseconds.");
 
@@ -79,7 +79,7 @@ class DataServiceImpl implements DataService {
         final Stopwatch thirdTimer = Stopwatch.createStarted();
         final Stopwatch fourthTimer = Stopwatch.createStarted();
 
-        Map dataStructures = metadataAdapter.getDataStructure(metadataQuery);
+        Map dataStructures = metadataService.getDataStructure(metadataQuery);
         log.info("Call to metadataAdapter.getDataStructure consumed {} miliseconds.",
                 secondTimer.stop().elapsed(TimeUnit.MILLISECONDS));
 
@@ -100,7 +100,7 @@ class DataServiceImpl implements DataService {
 
     @Override
     public Map getDataStructureVersion(DataStoreVersionQuery query) {
-        return metadataAdapter.getDataStructureVersion(query);
+        return metadataService.getDataStructureVersion(query);
     }
 
     private SplitDatums createSplitDatums(Collection<Datum> datums, Boolean includeAttributes) {
