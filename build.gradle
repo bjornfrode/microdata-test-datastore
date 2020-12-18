@@ -14,7 +14,7 @@ plugins {
 group = 'no.microdata.datastore'
 def buildNumber = project.hasProperty('buildNumber') ? project.property('buildNumber') : '0'
 def applicationTitle = project.name
-def applicationVersion = "1.5.$buildNumber"
+def applicationVersion = "0.9.$buildNumber"
 project.version = applicationVersion
 
 sourceCompatibility = '15'
