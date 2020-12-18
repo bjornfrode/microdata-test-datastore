@@ -34,6 +34,13 @@ public class SplitDatums {
         }
     }
 
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
 
     @Override
     public String toString(){
