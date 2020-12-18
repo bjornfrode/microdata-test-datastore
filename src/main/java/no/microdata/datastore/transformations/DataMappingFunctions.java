@@ -3,9 +3,7 @@ package no.microdata.datastore.transformations;
 import no.microdata.datastore.model.Datatype;
 import no.microdata.datastore.model.SplitDatums;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataMappingFunctions {
@@ -90,20 +88,13 @@ public class DataMappingFunctions {
 
     public static Map addStartTimeDatumsToDataStructure(Map dataStructure, SplitDatums datums) {
 
-        // Groovy:
-//        Map startAttributeVariable = dataStructure?.attributeVariables?.find{
-//            it?.variableRole == "Start"
-//        }
-
         Map startAttributeVariable=null;
-        if (dataStructure!=null && dataStructure.get("attributeVariables")!=null){
-            List<Map> attributeVariables = (List) dataStructure.get("attributeVariables");
-            for ( Map attributeVariable : attributeVariables){
-                if (attributeVariable.get("variableRole").equals("Start")){
-                    startAttributeVariable = attributeVariable;
-                    break;
-                }
-            }
+        if (dataStructure!=null) {
+            List<Map> attributeVariables = (List) dataStructure.getOrDefault("attributeVariables", new ArrayList<>());
+            Optional<Map> first = attributeVariables.stream()
+                    .filter(attributeVariable -> Objects.equals(attributeVariable.get("variableRole"),"Start"))
+                    .findFirst();
+            startAttributeVariable = first.orElse(null);
         }
 
         if (validAttributeVariableExists(startAttributeVariable) && datums.getStartDates().size() > 0){
@@ -115,20 +106,14 @@ public class DataMappingFunctions {
     }
 
     public static Map addEndTimeDatumsToDataStructure(Map dataStructure, SplitDatums datums) {
-        // Groovy:
-//        Map endAttributeVariable = dataStructure?.attributeVariables?.find{
-//            it?.variableRole == "Stop"
-//        }
 
         Map endAttributeVariable=null;
-        if (dataStructure!=null && dataStructure.get("attributeVariables")!=null){
-            List<Map> attributeVariables = (List) dataStructure.get("attributeVariables");
-            for ( Map attributeVariable : attributeVariables){
-                if (attributeVariable.get("variableRole").equals("Stop")){
-                    endAttributeVariable = attributeVariable;
-                    break;
-                }
-            }
+        if (dataStructure!=null) {
+            List<Map> attributeVariables = (List) dataStructure.getOrDefault("attributeVariables", new ArrayList<>());
+            Optional<Map> first = attributeVariables.stream()
+                    .filter(attributeVariable -> Objects.equals(attributeVariable.get("variableRole"),"Stop"))
+                    .findFirst();
+            endAttributeVariable = first.orElse(null);
         }
 
         if (validAttributeVariableExists(endAttributeVariable) && datums.getStopDates().size() > 0){
