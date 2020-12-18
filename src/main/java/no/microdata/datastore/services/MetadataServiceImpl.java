@@ -38,7 +38,7 @@ public class MetadataServiceImpl implements MetadataService {
 
         return Map.of(
                 "datastructureName","AKT_ARBAP",
-                "datastructureVersion", "4.1.0.0"
+                "datastructureVersion", "1.0.0.0"
         );
     }
 

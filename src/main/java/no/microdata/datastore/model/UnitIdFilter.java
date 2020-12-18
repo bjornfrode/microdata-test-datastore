@@ -5,10 +5,6 @@ import java.util.Set;
 
 public record UnitIdFilter(Set<Long> unitIds){
 
-    public UnitIdFilter {
-        throw new IllegalArgumentException("Use 'create' method instead");
-    }
-
     public static UnitIdFilter create(Set<Long> unitIds) {
         if (unitIds == null){
             unitIds = noFilterInstance().unitIds();

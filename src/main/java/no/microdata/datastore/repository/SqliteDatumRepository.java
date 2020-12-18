@@ -48,11 +48,11 @@ public class SqliteDatumRepository implements DatumRepository {
 
     private Connection getConnection(DatasetRevision datasetRevision) throws SQLException {
         String fileName = String.format(
-                "%s/dataset/%s/%s_%s.db",
+                "%s/dataset/%s/%s__%s.db",
                 datastoreRoot,
                 datasetRevision.getDatasetName(),
                 datasetRevision.getDatasetName(),
-                VersionUtils.toTwoLabels(datasetRevision.getVersion()));
+                VersionUtils.toTwoLabels(datasetRevision.getVersion()).replace(".", "_"));
 
         return DriverManager.getConnection("jdbc:sqlite:" + fileName, sqLiteConfig.toProperties());
     }
@@ -246,7 +246,7 @@ public class SqliteDatumRepository implements DatumRepository {
 
     static PreparedStatement findByTimePeriodStatement(Connection con, EventQuery query) throws SQLException {
         StringBuilder select = new StringBuilder();
-        if (query.getIncludeAttributes()){
+        if (query.getIncludeAttributes() != null && query.getIncludeAttributes()){
             select.append("SELECT unit_id, value, start, stop ");
         }else {
             select.append("SELECT unit_id, value ");
