@@ -32,9 +32,9 @@ public class Datum {
 
     private void validateInput(Long id, String value) {
         if (id == null)
-            throw new IllegalArgumentException("\'ID\' should not be null");
+            throw new IllegalArgumentException("'ID' should not be null");
         if (Strings.isNullOrEmpty(value))
-            throw new IllegalArgumentException("\'Value\' should not be null or empty");
+            throw new IllegalArgumentException("'Value' should not be null or empty");
     }
 
     public String getValue() {

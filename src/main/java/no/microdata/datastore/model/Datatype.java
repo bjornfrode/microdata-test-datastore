@@ -7,7 +7,7 @@ public enum Datatype {
     DOUBLE("Double");
 
     String text;
-    private Datatype(String text){
+    Datatype(String text){
         this.text = text;
     }
 

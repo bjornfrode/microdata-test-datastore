@@ -37,15 +37,15 @@ public abstract class InputQuery {
     }
 
     public boolean hasValueFilter(){
-        return  (values!=null && values.size() > 0) ? true : false;
+        return values != null && values.size() > 0;
     }
 
     boolean hasUnitIdFilter(){
-        return  (populationFilter().size() > 0) ? true : false;
+        return populationFilter().size() > 0;
     }
 
     public boolean hasIntervalFilter(){
-        return  (intervalFilter!=null && intervalFilter.length() > 0) ? true : false;
+        return intervalFilter != null && intervalFilter.length() > 0;
     }
 
     public Set<Long> populationFilter(){

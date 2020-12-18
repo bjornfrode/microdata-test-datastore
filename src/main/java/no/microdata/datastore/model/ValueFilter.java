@@ -6,7 +6,7 @@ import java.util.Set;
 public record ValueFilter (Set<String> valueFilter){
 
     public static  ValueFilter noFilterInstance(){
-        return new ValueFilter(new HashSet<String>());
+        return new ValueFilter(new HashSet<>());
     }
 
     public boolean hasValues(){

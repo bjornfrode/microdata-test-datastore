@@ -42,7 +42,7 @@ public class VersionUtils {
         return version;
     }
 
-    static final boolean is4PartSemanticVersion(String version) {
+    static boolean is4PartSemanticVersion(String version) {
         Matcher matcher = PATTERN4PARTS.matcher(version);
         return matcher.find();
     }

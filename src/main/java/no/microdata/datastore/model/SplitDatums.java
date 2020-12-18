@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
  */
 public class SplitDatums {
 
-    List<Long> ids = new ArrayList<Long>();
-    List<String> values = new ArrayList<String>();
-    List<LocalDate> startDates = new ArrayList<LocalDate>();
-    List<LocalDate> stopDates = new ArrayList<LocalDate>();
+    List<Long> ids;
+    List<String> values;
+    List<LocalDate> startDates = new ArrayList<>();
+    List<LocalDate> stopDates = new ArrayList<>();
 
     public SplitDatums(Map args) {
         ids = (List<Long>) args.get("ids");
@@ -48,7 +48,7 @@ public class SplitDatums {
     }
 
     static List<Long> datesAsDays(List<LocalDate> dates) {
-        return dates.stream().map(LocalDate -> LocalDate.toEpochDay()).collect(Collectors.toList());
+        return dates.stream().map(LocalDate::toEpochDay).collect(Collectors.toList());
     }
 
     List<Long> stopDatesAsDays() {

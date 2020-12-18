@@ -72,7 +72,7 @@ public class SqliteDatumRepository implements DatumRepository {
             ResultSet rs = stmt.executeQuery();
 
             final Collection<Datum> results = collectResult(query.getUnitIdFilter(), query.getIncludeAttributes(), rs);
-            logResultsAndElapsedTime(stmt, timer, results);
+            logResultsAndElapsedTime(timer, results);
             return results;
         }
         catch (SQLException e) {
@@ -96,7 +96,7 @@ public class SqliteDatumRepository implements DatumRepository {
 
             final Collection<Datum> results = collectResult(query.getUnitIdFilter(), query.getIncludeAttributes(), rs);
 
-            logResultsAndElapsedTime(stmt, timer, results);
+            logResultsAndElapsedTime(timer, results);
             return results;
         }
         catch (SQLException e) {
@@ -120,7 +120,7 @@ public class SqliteDatumRepository implements DatumRepository {
             ResultSet rs = stmt.executeQuery();
             final Collection<Datum> results = collectResult(query.getUnitIdFilter(), query.getIncludeAttributes(), rs);
 
-            logResultsAndElapsedTime(stmt, timer, results);
+            logResultsAndElapsedTime(timer, results);
             return results;
         }
         catch (SQLException e) {
@@ -147,7 +147,7 @@ public class SqliteDatumRepository implements DatumRepository {
     }
 
     private void addDatum(Collection<Datum> result, ResultSet rs, Long id, Boolean includeAttributes) throws SQLException {
-        if (includeAttributes==false){
+        if (!includeAttributes){
             result.add(new Datum(id, rs.getString("value")));
         }else {
             if (rs.getDate("stop") != null) {
@@ -167,10 +167,11 @@ public class SqliteDatumRepository implements DatumRepository {
         }else {
             select.append("SELECT unit_id, value ");
         }
-        select.append(
-                "FROM `" + getTableName(query.getDatasetRevision()) + "` " +
-                        "WHERE part_num BETWEEN ? AND ? " +
-                        " AND ( (start <= ? AND stop IS NULL) OR (start <= ? AND stop >= ? ) ) ");
+        select.append("FROM `")
+                .append(getTableName(query.getDatasetRevision()))
+                .append("` ")
+                .append("WHERE part_num BETWEEN ? AND ? ")
+                .append(" AND ( (start <= ? AND stop IS NULL) OR (start <= ? AND stop >= ? ) ) ");
         ValueFilter valueFilter = query.getValueFilter();
         if (valueFilter.hasValues()){
             createINSqlClause(select, valueFilter.valueFilter().size());
@@ -210,10 +211,10 @@ public class SqliteDatumRepository implements DatumRepository {
 
     private PreparedStatement findByFixedStatement(Connection con, FixedQuery query) throws SQLException {
         StringBuilder select = new StringBuilder();
-        select.append(
-                "SELECT unit_id, value " +
-                        "FROM `" + getTableName(query.getDatasetRevision()) + "` " +
-                        "WHERE part_num BETWEEN ? AND ? ");
+        select.append("SELECT unit_id, value " + "FROM `")
+                .append(getTableName(query.getDatasetRevision()))
+                .append("` ")
+                .append("WHERE part_num BETWEEN ? AND ? ");
 
         ValueFilter valueFilter = query.getValueFilter();
         if (valueFilter.hasValues()){
@@ -250,11 +251,13 @@ public class SqliteDatumRepository implements DatumRepository {
         }else {
             select.append("SELECT unit_id, value ");
         }
-        select.append("FROM `" + getTableName(query.getDatasetRevision()) + "` " +
-                "WHERE (part_num BETWEEN ? AND ?) " +
-                "AND ( ( (start <= ? AND stop IS NULL) OR (start <= ? AND stop >= ?) )" +
-                "OR" +
-                "( (start BETWEEN ? AND ?) OR (start > ? AND stop <= ?) ) ) ");
+        select.append("FROM `")
+                .append(getTableName(query.getDatasetRevision()))
+                .append("` ")
+                .append("WHERE (part_num BETWEEN ? AND ?) ")
+                .append("AND ( ( (start <= ? AND stop IS NULL) OR (start <= ? AND stop >= ?) )")
+                .append("OR")
+                .append("( (start BETWEEN ? AND ?) OR (start > ? AND stop <= ?) ) ) ");
 
         if (query.getValueFilter().hasValues()){
             createINSqlClause(select, query.getValueFilter().size());
@@ -348,7 +351,7 @@ public class SqliteDatumRepository implements DatumRepository {
         log.info("Sql = {}", logFriendlySqlString(stmt));
     }
 
-    static void logResultsAndElapsedTime(PreparedStatement stmt, Stopwatch timer, Collection<Datum> results) {
+    static void logResultsAndElapsedTime(Stopwatch timer, Collection<Datum> results) {
         log.info("#results = {}, time = {}s ({}ms)",
                 results.size(), timer.stop().elapsed(TimeUnit.SECONDS), timer.elapsed(TimeUnit.MILLISECONDS));
     }

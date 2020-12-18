@@ -107,10 +107,10 @@ class DataServiceImpl implements DataService {
 
     private SplitDatums createSplitDatums(Collection<Datum> datums, Boolean includeAttributes) {
 
-        List<Long> ids = new ArrayList<Long>();
-        List<String> values = new ArrayList<String>();
-        List<LocalDate> startDates = new ArrayList<LocalDate>();
-        List<LocalDate> stopDates = new ArrayList<LocalDate>();
+        List<Long> ids = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+        List<LocalDate> startDates = new ArrayList<>();
+        List<LocalDate> stopDates = new ArrayList<>();
 
 
         SplitDatums splitDatums;
