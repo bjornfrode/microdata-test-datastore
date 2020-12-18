@@ -12,7 +12,7 @@ public class DataStructureServiceImpl implements DataStructureService {
 
     @Override
     public List<Map<String, Object>> find(MetadataQuery query) {
-        return List.of(Map.of("key", "value"));
+        return List.of(Map.of("key", "DataStructureServiceImpl"));
     }
 
 }
