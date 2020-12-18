@@ -3,6 +3,7 @@ package no.microdata.datastore.transformations;
 import no.microdata.datastore.model.Datatype;
 import no.microdata.datastore.model.SplitDatums;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,7 +39,8 @@ public class DataMappingFunctions {
             } else
                 ((Map)dataStructure.get("measureVariable")).put("datums", datums.getValues());
         } else
-            throw new IllegalArgumentException("The DataStructure map has illegal measureVariable object. DataStructure = " + dataStructure);
+            throw new IllegalArgumentException(
+                    "The DataStructure map has illegal measureVariable object. DataStructure = " + dataStructure);
 
         return dataStructure;
     }
@@ -52,56 +54,88 @@ public class DataMappingFunctions {
     }
 
     private static boolean validMeasureVariableExists(Map dataStructure) {
-        dataStructure?.measureVariable?.containsKey('label')
+        if (dataStructure!=null && dataStructure.get("measureVariable")!=null &&
+                        ((Map)dataStructure.get("measureVariable")).containsKey("label")){
+            return true;
+        }
+        return false;
     }
 
     private static boolean validIdentifierVariableExists(Map identifierVariable) {
-        identifierVariable?.containsKey('label')
+        if (identifierVariable!=null && identifierVariable.containsKey("label")){
+            return true;
+        }
+        return false;
     }
 
     private static boolean validAttributeVariableExists(Map attributeVariable) {
-        attributeVariable?.containsKey('label')
+        if (attributeVariable!=null && attributeVariable.containsKey("label")){
+            return true;
+        }
+        return false;
     }
 
     public static Map addIdentifierDatumsToDataStructure(Map dataStructure, SplitDatums datums) {
 
-        Map identifierVariable = dataStructure.identifierVariables[0]
+        Map identifierVariable = (Map) ((List)dataStructure.get("identifierVariables")).get(0);
 
         if (validIdentifierVariableExists(identifierVariable)){
-            if(identifierVariable.dataType.equals(Datatype.LONG.toString())){
-                identifierVariable.put('datums', datums.ids.collect({new Long(it)}))
-            } else
-                identifierVariable.put('datums', datums.ids)
-
+                identifierVariable.put("datums", datums.getIds());
         } else
-            throw new IllegalArgumentException("The DataStructure map has illegal identifier object. DataStructure = $dataStructure")
+            throw new IllegalArgumentException(
+                    "The DataStructure map has illegal identifier object. DataStructure = " + dataStructure);
 
-        dataStructure
+        return dataStructure;
     }
 
     public static Map addStartTimeDatumsToDataStructure(Map dataStructure, SplitDatums datums) {
-        Map startAttributeVariable = dataStructure?.attributeVariables?.find{
-            it?.variableRole == "Start"
+
+        // Groovy:
+//        Map startAttributeVariable = dataStructure?.attributeVariables?.find{
+//            it?.variableRole == "Start"
+//        }
+
+        Map startAttributeVariable=null;
+        if (dataStructure!=null && dataStructure.get("attributeVariables")!=null){
+            List<Map> attributeVariables = (List) dataStructure.get("attributeVariables");
+            for ( Map attributeVariable : attributeVariables){
+                if (attributeVariable.get("variableRole").equals("Start")){
+                    startAttributeVariable = attributeVariable;
+                    break;
+                }
+            }
         }
 
-        if (validAttributeVariableExists(startAttributeVariable) && datums.startDates.size() > 0){
-            startAttributeVariable.put('datums', datums.startDatesAsDays())
+        if (validAttributeVariableExists(startAttributeVariable) && datums.getStartDates().size() > 0){
+            startAttributeVariable.put("datums", datums.startDatesAsDays());
         }else {
-            startAttributeVariable.put('datums', [])
+            startAttributeVariable.put("datums", new ArrayList<>());
         }
-        dataStructure
+        return dataStructure;
     }
 
     public static Map addEndTimeDatumsToDataStructure(Map dataStructure, SplitDatums datums) {
-        Map endAttributeVariable = dataStructure?.attributeVariables?.find{
-            it?.variableRole == "Stop"
+        // Groovy:
+//        Map endAttributeVariable = dataStructure?.attributeVariables?.find{
+//            it?.variableRole == "Stop"
+//        }
+
+        Map endAttributeVariable=null;
+        if (dataStructure!=null && dataStructure.get("attributeVariables")!=null){
+            List<Map> attributeVariables = (List) dataStructure.get("attributeVariables");
+            for ( Map attributeVariable : attributeVariables){
+                if (attributeVariable.get("variableRole").equals("Stop")){
+                    endAttributeVariable = attributeVariable;
+                    break;
+                }
+            }
         }
 
-        if (validAttributeVariableExists(endAttributeVariable) && datums.stopDates.size() > 0){
-            endAttributeVariable.put('datums', datums.stopDatesAsDays())
+        if (validAttributeVariableExists(endAttributeVariable) && datums.getStopDates().size() > 0){
+            endAttributeVariable.put("datums", datums.stopDatesAsDays());
         }else {
-            endAttributeVariable.put('datums', [])
+            endAttributeVariable.put("datums", new ArrayList<>());
         }
-        dataStructure
+        return dataStructure;
     }
 }

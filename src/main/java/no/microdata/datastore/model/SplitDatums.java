@@ -42,6 +42,14 @@ public class SplitDatums {
         return values;
     }
 
+    public List<LocalDate> getStartDates() {
+        return startDates;
+    }
+
+    public List<LocalDate> getStopDates() {
+        return stopDates;
+    }
+
     @Override
     public String toString(){
         return "Datum size = " + ids.size();
@@ -51,11 +59,11 @@ public class SplitDatums {
         return dates.stream().map(LocalDate::toEpochDay).collect(Collectors.toList());
     }
 
-    List<Long> stopDatesAsDays() {
+    public List<Long> stopDatesAsDays() {
         return datesAsDays(stopDates);
     }
 
-    List<Long> startDatesAsDays() {
+    public List<Long> startDatesAsDays() {
         return datesAsDays(startDates);
     }
 }
