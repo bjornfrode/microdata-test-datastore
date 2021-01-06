@@ -65,11 +65,30 @@ class DataServiceImpl implements DataService {
 
     @Override
     public Map getStatus(MetadataQuery metadataQuery, StatusQuery statusQuery) {
-        log.debug("Entering getStatus() with metadata query = $metadataQuery and time query = $statusQuery");
+        log.debug("Entering getStatus() with metadata query = {} and time query = {}", metadataQuery, statusQuery);
 
-        return Map.of(
-                "getStatus", "dummy"
-        );
+        final Stopwatch firstTimer = Stopwatch.createStarted();
+        final Stopwatch secondTimer = Stopwatch.createStarted();
+        final Stopwatch thirdTimer = Stopwatch.createStarted();
+        final Stopwatch fourthTimer = Stopwatch.createStarted();
+
+        Map dataStructures = metadataService.getDataStructure(metadataQuery);
+        log.info("Call to metadataAdapter.getDataStructure consumed {} miliseconds.",
+                secondTimer.stop().elapsed(TimeUnit.MILLISECONDS));
+
+        Collection<Datum> datums = repository.findByTime(statusQuery);
+        SplitDatums splitDatums = createSplitDatums(datums, statusQuery.getIncludeAttributes());
+        log.info("Call to repository.findByTime consumed {} miliseconds.",
+                thirdTimer.stop().elapsed(TimeUnit.MILLISECONDS));
+
+        Map dataStructure = DataMappingFunctions.addDatumsToDataStructure(dataStructures, splitDatums,
+                statusQuery.getIncludeAttributes());
+        log.info("Call to DataMappingFunctions.addDatumsToDataStructure consumed {} miliseconds.",
+                fourthTimer.stop().elapsed(TimeUnit.MILLISECONDS));
+
+        log.info("Leaving getStatus with total elapsed time : {} seconds.", firstTimer.stop().elapsed(TimeUnit.SECONDS));
+
+        return dataStructure;
     }
 
     @Override
