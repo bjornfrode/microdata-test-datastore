@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <property resource="application.properties" />
+    <conversionRule conversionWord="stack" converterClass="net.logstash.logback.stacktrace.ShortenedThrowableConverter" />
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+
+                <timestamp>
+                    <fieldName>@timestamp</fieldName>
+                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</pattern>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+
+                <threadName>
+                    <fieldName>thread</fieldName>
+                </threadName>
+
+                <loggerName>
+                    <fieldName>loggerName</fieldName>
+                </loggerName>
+
+                <pattern>
+                    <pattern>   {
+                        "schemaVersion": "v3",
+                        "levelName": "%level",
+                        "serviceVersion": "${info.version}",
+                        "serviceName": "${spring.application.name}",
+                        "xRequestId": "%mdc{xRequestId}",
+                        "method": "%mdc{method}",
+                        "url": "%mdc{url}",
+                        "statusCode": "#asLong{%mdc{statusCode}}",
+                        "responseTime": "#asLong{%mdc{responseTime}}",
+                        "message": "%message",
+                        "error.stack": "[%thread] - %msg%n%stack{full,full,full,rootFirst,regex1,regex2,evaluatorName}"
+                        }
+                    </pattern>
+                </pattern>
+
+                <logstashMarkers/>
+
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+<!--        <appender-ref ref="JSON"/>-->
+    </root>
+
+</configuration>
+

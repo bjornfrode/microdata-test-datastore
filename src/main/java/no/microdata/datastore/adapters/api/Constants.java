@@ -13,5 +13,5 @@ public class Constants {
     public static final String NAMES = "names";
     public static final String DATASTRUCTURE_NAME = "datastructureName";
     public static final String DATASTORE_VERSION = "dataStoreVersion";
-//    public static final List<String> NON_VERSIONED_STATUS_LIST = ["PENDING_RELEASE", "PENDING_DELETE", "DRAFT"];
+    
 }

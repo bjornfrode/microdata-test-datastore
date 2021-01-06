@@ -14,9 +14,10 @@ public class DatasetRevision {
         String tempDatasetName = (String) inputFields.get("datasetName");
         String tempVersion = (String) inputFields.get("version");
 
-        if (!hasRequiredFields(tempDatasetName, tempVersion))
+        if (!hasRequiredFields(tempDatasetName, tempVersion)) {
             throw new AssertionError(
                     String.format("Missing required field. Fields datasetName = %s, version = %s", tempDatasetName, tempVersion));
+        }
 
         this.datasetName = tempDatasetName;
         this.version = tempVersion;
@@ -24,6 +25,14 @@ public class DatasetRevision {
 
     private boolean hasRequiredFields(String datasetName, String version) {
         return !Strings.isNullOrEmpty(datasetName) && !Strings.isNullOrEmpty(version);
+    }
+
+    public String getDatasetName() {
+        return datasetName;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     @Override
@@ -50,9 +59,9 @@ public class DatasetRevision {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        MetadataQuery other = (MetadataQuery) obj;
-        return Objects.equals(datasetName, other.languages)
-                && Objects.equals(version, other.requestId);
+        DatasetRevision other = (DatasetRevision) obj;
+        return Objects.equals(datasetName, other.datasetName)
+                && Objects.equals(version, other.version);
     }
 
 }

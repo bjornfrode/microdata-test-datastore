@@ -15,7 +15,11 @@ public record IntervalFilter(int from, int to){
         }
 
         var matcher = PATTERN.matcher(interval);
-        matcher.find();
+        boolean found = matcher.find();
+
+        if (!found) {
+            throw new RuntimeException("Should not have happened. Interval: " + interval);
+        }
 
         int from = Integer.parseInt(matcher.group(1));
         int to = Integer.parseInt(matcher.group(2));

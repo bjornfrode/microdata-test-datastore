@@ -42,8 +42,27 @@ public class VersionUtils {
         return version;
     }
 
-    static final boolean is4PartSemanticVersion(String version) {
+    static boolean is4PartSemanticVersion(String version) {
         Matcher matcher = PATTERN4PARTS.matcher(version);
         return matcher.find();
+    }
+
+    public static String toTwoLabels(String version) {
+        if (!is4PartSemanticVersion(version)
+                //don't allow DRAFT
+                || version.startsWith(threeZeros)) {
+            var message = ErrorMessage.versionValidationError(version);
+            LOG.error("Version validation error with version " + version + " Error message: " + message);
+            throw new BadRequestException(message);
+        }
+
+        Matcher matcher = PATTERN4PARTS.matcher(version);
+        boolean found = matcher.find();
+
+        if (!found) {
+            throw new RuntimeException("Should not have happened. Version: " + version);
+        }
+
+        return String.format("%s.%s", matcher.group(1), matcher.group(2));
     }
 }

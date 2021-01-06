@@ -1,5 +1,6 @@
 package no.microdata.datastore.adapters.api.dto;
 
+import no.microdata.datastore.adapters.api.ErrorMessage;
 import no.microdata.datastore.exceptions.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class InputTimeQuery extends InputQuery{
     public boolean validate() {
         super.validate();
         if (isNullOrEmpty(date))
-            throw  new BadRequestException(no.microdata.datastore.adapters.api.ErrorMessage.requestValidationError(no.microdata.datastore.adapters.api.ErrorMessage.INPUT_FIELD_START_DATE));
+            throw  new BadRequestException(ErrorMessage.requestValidationError(ErrorMessage.INPUT_FIELD_START_DATE));
         return true;
     }
 

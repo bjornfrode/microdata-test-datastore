@@ -18,7 +18,7 @@ public class Credentials {
     String password;
 
     boolean isValid(){
-        return ( VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password) ) ? true : false;
+        return VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password);
     }
 
     public String getUsername() {

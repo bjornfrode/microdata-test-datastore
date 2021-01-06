@@ -1,13 +1,13 @@
 package no.microdata.datastore.model;
 
-enum Datatype {
+public enum Datatype {
 
     LONG("Long"),
     STRING("String"),
     DOUBLE("Double");
 
     String text;
-    private Datatype(String text){
+    Datatype(String text){
         this.text = text;
     }
 

@@ -46,6 +46,30 @@ public class StatusQuery {
         return unitIdFilter.unitIds().size() > 0;
     }
 
+    public UnitIdFilter getUnitIdFilter() {
+        return unitIdFilter;
+    }
+
+    public Boolean getIncludeAttributes() {
+        return includeAttributes;
+    }
+
+    public DatasetRevision getDatasetRevision() {
+        return datasetRevision;
+    }
+
+    public ValueFilter getValueFilter() {
+        return valueFilter;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public IntervalFilter getIntervalFilter() {
+        return intervalFilter;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", StatusQuery.class.getSimpleName() + "[", "]")

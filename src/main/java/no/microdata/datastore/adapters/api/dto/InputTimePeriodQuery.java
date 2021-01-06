@@ -42,7 +42,7 @@ public class InputTimePeriodQuery extends InputQuery{
         if (hasIntervalFilter()){
             string.concat(String.format(", interval filter: %1$s", intervalFilter));
         }
-        if (includeAttributes){
+        if (includeAttributes != null && includeAttributes){
             string.concat(String.format(", includeAttributes: %1$b", includeAttributes));
         }
         return string.concat(" }");

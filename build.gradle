@@ -14,7 +14,7 @@ plugins {
 group = 'no.microdata.datastore'
 def buildNumber = project.hasProperty('buildNumber') ? project.property('buildNumber') : '0'
 def applicationTitle = project.name
-def applicationVersion = "1.5.$buildNumber"
+def applicationVersion = "0.9.$buildNumber"
 project.version = applicationVersion
 
 sourceCompatibility = '15'
@@ -41,6 +41,7 @@ dependencies {
     implementation 'org.msgpack:jackson-dataformat-msgpack:0.8.21'
     implementation 'net.logstash.logback:logstash-logback-encoder:6.5'
     implementation 'com.google.guava:guava:30.0-jre'
+    implementation 'org.xerial:sqlite-jdbc:3.34.0'
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

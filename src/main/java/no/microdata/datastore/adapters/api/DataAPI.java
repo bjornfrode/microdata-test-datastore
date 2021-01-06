@@ -22,7 +22,6 @@ import no.microdata.datastore.model.UnitIdFilter;
 import no.microdata.datastore.model.ValueFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,8 +32,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -50,8 +49,11 @@ class DataAPI {
 
     private final static Logger log = LoggerFactory.getLogger(DataAPI.class);
 
-    @Autowired
-    private DataService dataService;
+    private final DataService dataService;
+
+    public DataAPI(DataService dataService) {
+        this.dataService = dataService;
+    }
 
     @RequestMapping(value = "/data/data-structure/event", method = RequestMethod.POST)
     Map getEvent(@RequestHeader(value = X_REQUEST_ID, required = false) String requestId,
@@ -78,27 +80,28 @@ class DataAPI {
                     getDataStructureVersion(dataStoreVersionQuery);
 
             MetadataQuery metadataQuery = new MetadataQuery(
-                    Map.of(
-                            "names", List.of(dataStructureName),
-                            "languages", languages,
-                            "version", datastoreVersion,
-                            "includeAttributes", inputTimePeriodQuery.getIncludeAttributes()
-                    ));
+                    new HashMap() {{
+                        put("names", List.of(dataStructureName));
+                        put("languages", languages);
+                        put("version",datastoreVersion);
+                        put("includeAttributes",inputTimePeriodQuery.getIncludeAttributes());
+                    }});
 
             DatasetRevision datasetRevision =
                     new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
+            String finalRequestId = requestId;
             EventQuery eventQuery = new EventQuery(
-                    Map.of(
-                            "datasetRevision",  datasetRevision,
-                            "startDate", LocalDate.ofEpochDay(startDate),
-                            "endDate", LocalDate.ofEpochDay(stopDate),
-                            "requestId", requestId,
-                            "valueFilter", createValueFilter(inputTimePeriodQuery),
-                            "unitIdFilter",  createUnitIdFilter(inputTimePeriodQuery),
-                            "intervalFilter", createIntervalFilter(inputTimePeriodQuery),
-                            "includeAttributes", inputTimePeriodQuery.getIncludeAttributes()
-                    ));
+                    new HashMap() {{
+                            put("datasetRevision", datasetRevision);
+                            put("startDate", LocalDate.ofEpochDay(startDate));
+                            put("endDate", LocalDate.ofEpochDay(stopDate));
+                            put("requestId", finalRequestId);
+                            put("valueFilter", createValueFilter(inputTimePeriodQuery));
+                            put("unitIdFilter",  createUnitIdFilter(inputTimePeriodQuery));
+                            put("intervalFilter", createIntervalFilter(inputTimePeriodQuery));
+                            put("includeAttributes", inputTimePeriodQuery.getIncludeAttributes());
+                    }});
 
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
@@ -138,28 +141,30 @@ class DataAPI {
             String dataStructureVersion =
                     getDataStructureVersion(dataStoreVersionQuery);
 
+            String finalRequestId = requestId;
             MetadataQuery metadataQuery = new MetadataQuery(
-                    Map.of(
-                            "names", List.of(dataStructureName),
-                            "languages", languages,
-                            "requestId", requestId,
-                            "version", datastoreVersion,
-                            "includeAttributes", inputTimeQuery.getIncludeAttributes()
-                    ));
+                    new HashMap() {{
+                        put("names", List.of(dataStructureName));
+                        put("languages", languages);
+                        put("requestId", finalRequestId);
+                        put("version",datastoreVersion);
+                        put("includeAttributes",inputTimeQuery.getIncludeAttributes());
+                    }});
 
             DatasetRevision datasetRevision =
                     new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
+            String finalRequestId1 = requestId;
             StatusQuery statusQuery = new StatusQuery(
-                    Map.of(
-                            "datasetRevision",  datasetRevision,
-                            "date", LocalDate.ofEpochDay(dateValue),
-                            "requestId", requestId,
-                            "valueFilter", createValueFilter(inputTimeQuery),
-                            "unitIdFilter",  createUnitIdFilter(inputTimeQuery),
-                            "intervalFilter", createIntervalFilter(inputTimeQuery),
-                            "includeAttributes", inputTimeQuery.getIncludeAttributes()
-                    ));
+                    new HashMap() {{
+                        put("datasetRevision", datasetRevision);
+                        put("date", LocalDate.ofEpochDay(dateValue));
+                        put("requestId", finalRequestId1);
+                        put("valueFilter", createValueFilter(inputTimeQuery));
+                        put("unitIdFilter",  createUnitIdFilter(inputTimeQuery));
+                        put("intervalFilter", createIntervalFilter(inputTimeQuery));
+                        put("includeAttributes", inputTimeQuery.getIncludeAttributes());
+                    }});
 
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
@@ -206,28 +211,28 @@ class DataAPI {
             String dataStructureVersion =
                     getDataStructureVersion(dataStoreVersionQuery);
 
+            String finalRequestId = requestId;
             MetadataQuery metadataQuery = new MetadataQuery(
-                    Map.of(
-                            "names", List.of(dataStructureName),
-                            "languages", languages,
-                            "requestId", requestId,
-                            "version", datastoreVersion,
-                            // includeAttributes: inputFixedQuery.includeAttributes) ??
-                            "includeAttributes", false
-                    ));
+                    new HashMap() {{
+                        put("names", List.of(dataStructureName));
+                        put("languages", languages);
+                        put("requestId", finalRequestId);
+                        put("version", datastoreVersion);
+                        put("includeAttributes", false);
+                    }});
 
             DatasetRevision datasetRevision =
                     new DatasetRevision(Map.of("datasetName", dataStructureName, "version", dataStructureVersion));
 
             FixedQuery fixedQuery = new FixedQuery(
-                    Map.of(
-                            "datasetRevision",  datasetRevision,
-                            "requestId", requestId,
-                            "valueFilter", createValueFilter(inputFixedQuery),
-                            "unitIdFilter",  createUnitIdFilter(inputFixedQuery),
-                            "intervalFilter", createIntervalFilter(inputFixedQuery),
-                            "includeAttributes", false
-                    ));
+                    new HashMap() {{
+                        put("datasetRevision", datasetRevision);
+                        put("requestId", finalRequestId);
+                        put("valueFilter", createValueFilter(inputFixedQuery));
+                        put("unitIdFilter",  createUnitIdFilter(inputFixedQuery));
+                        put("intervalFilter", createIntervalFilter(inputFixedQuery));
+                        put("includeAttributes", false);
+                    }});
 
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
@@ -247,7 +252,7 @@ class DataAPI {
 
     String getDataStructureVersion(DataStoreVersionQuery query){
         var response = dataService.getDataStructureVersion(query);
-        if (! response.get("datastructureName").equals(query.dataStructureName())) {
+        if (! Objects.equals(response.get("datastructureName"), query.dataStructureName())) {
             throw new RuntimeException(
                     String.format("Query data structure name %s does not match name from metadata store %s",
                             query.dataStructureName(), response.get("datastructureName")));
