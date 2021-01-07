@@ -10,9 +10,12 @@ public record IntervalFilter(int from, int to){
 
     public static IntervalFilter create(String interval){
 
-        if(!Strings.isNullOrEmpty(interval)) {
+        /*if(!Strings.isNullOrEmpty(interval)) {
             throw new IllegalArgumentException("Argument \"interval\" should not be null or empty");
         }
+        */
+        //Hard-coding interval as currently not in use
+        interval = "0,999";
 
         var matcher = PATTERN.matcher(interval);
         boolean found = matcher.find();
