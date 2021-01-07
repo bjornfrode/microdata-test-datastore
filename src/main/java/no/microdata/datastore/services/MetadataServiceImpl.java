@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class MetadataServiceImpl implements MetadataService {
@@ -24,9 +25,18 @@ public class MetadataServiceImpl implements MetadataService {
         log.warn("Example implementation - hardcoded!");
 
         try {
-            return (Map) new ObjectMapper().readValue(
+            Map metadataAll = new ObjectMapper().readValue(
                     Files.readString(Paths.get(
-                            "src/test/resources/fixtures/dataStructures.json")), List.class).get(0);
+                            "src/test/resources/no_ssb_test_datastore/metadata/metadata-all-test__1_0_0.json")), Map.class);
+            List<Map> datasets = (List<Map>) metadataAll.get("dataStructures");
+
+            for (Map dataset: datasets) {
+                if (Objects.equals(metadataQuery.getNames().get(0), dataset.get("name"))) {
+                    return dataset;
+                }
+            }
+
+            throw new RuntimeException("Should not have happened");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +47,7 @@ public class MetadataServiceImpl implements MetadataService {
         log.warn("Example implementation - hardcoded!");
 
         return Map.of(
-                "datastructureName","AKT_ARBAP",
+                "datastructureName","GRUNNSTFDT_MOTTAK",
                 "datastructureVersion", "1.0.0.0"
         );
     }
