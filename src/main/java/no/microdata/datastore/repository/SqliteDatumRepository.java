@@ -54,6 +54,7 @@ public class SqliteDatumRepository implements DatumRepository {
                 datasetRevision.getDatasetName(),
                 VersionUtils.toTwoLabels(datasetRevision.getVersion()).replace(".", "_"));
 
+        log.debug("Database file: {}", fileName);
         return DriverManager.getConnection("jdbc:sqlite:" + fileName, sqLiteConfig.toProperties());
     }
 
