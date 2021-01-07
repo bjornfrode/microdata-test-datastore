@@ -17,7 +17,7 @@ public class DataMappingFunctions {
         dataStructure = addMeasureDatumsToDataStructure(dataStructure, datums);
         dataStructure = addIdentifierDatumsToDataStructure(dataStructure, datums);
 
-        if (includeAttributes){
+        if (includeAttributes != null && includeAttributes){
             dataStructure = addStartTimeDatumsToDataStructure(dataStructure, datums);
             dataStructure = addEndTimeDatumsToDataStructure(dataStructure, datums);
         }

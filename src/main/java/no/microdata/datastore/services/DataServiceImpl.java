@@ -114,7 +114,7 @@ class DataServiceImpl implements DataService {
 
 
         SplitDatums splitDatums;
-        if (includeAttributes){
+        if (includeAttributes != null && includeAttributes){
             if (! CollectionUtils.isEmpty(datums)){
                 for (Datum datum : datums){
                     ids.add(datum.getId());
