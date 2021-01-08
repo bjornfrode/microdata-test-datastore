@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,12 +64,12 @@ class MetadataAPI {
                                 HttpServletResponse response) {
 
         MetadataQuery query = new MetadataQuery(
-                Map.of(
-                        "names", names,
-                        "languages", joinToString(languages),
-                        "requestId", verifyAndUpdateRequestId(requestId),
-                        "version", VersionUtils.toThreeLabelsIfNotDraft(version)
-                ));
+                new HashMap() {{
+                    put("names", names);
+                    put("languages", joinToString(languages));
+                    put("requestId", verifyAndUpdateRequestId(requestId));
+                    put("version", VersionUtils.toThreeLabelsIfNotDraft(version));
+                }});
 
         log.info("Entering getDataStructures() where query = {}", query);
 
@@ -85,11 +86,11 @@ class MetadataAPI {
                        HttpServletResponse response) {
 
         MetadataQuery query = new MetadataQuery(
-                Map.of(
-                        "languages", joinToString(languages),
-                        "requestId", verifyAndUpdateRequestId(requestId),
-                        "version", VersionUtils.toThreeLabelsIfNotDraft(version)
-                ));
+                new HashMap() {{
+                    put("languages", joinToString(languages));
+                    put("requestId", verifyAndUpdateRequestId(requestId));
+                    put("version", VersionUtils.toThreeLabelsIfNotDraft(version));
+                }});
 
         log.info("Entering getAllMetadata() where query = {}", query);
 

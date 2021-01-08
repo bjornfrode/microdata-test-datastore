@@ -36,7 +36,7 @@ public class MetadataServiceImpl implements MetadataService {
                 }
             }
 
-            throw new RuntimeException("Should not have happened");
+            throw new RuntimeException("Dataset with name " + metadataQuery.getNames().get(0) + " not found");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
