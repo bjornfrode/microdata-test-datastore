@@ -32,7 +32,8 @@ public class MetadataQuery {
             this.names = List.of();
         }
 
-        this.version = (String) inputFields.get("version");
+        // MVP1, remember?
+        this.version = "1.0.0.0";
         this.requestId = (String) inputFields.get("requestId");
         this.languages = (String) inputFields.get("languages");
     }
