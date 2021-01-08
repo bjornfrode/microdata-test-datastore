@@ -47,7 +47,7 @@ public class MetadataServiceImpl implements MetadataService {
         log.warn("Example implementation - hardcoded!");
 
         return Map.of(
-                "datastructureName","GRUNNSTFDT_MOTTAK",
+                "datastructureName", query.dataStructureName(),
                 "datastructureVersion", "1.0.0.0"
         );
     }
