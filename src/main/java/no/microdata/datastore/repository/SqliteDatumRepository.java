@@ -148,7 +148,7 @@ public class SqliteDatumRepository implements DatumRepository {
     }
 
     private void addDatum(Collection<Datum> result, ResultSet rs, Long id, Boolean includeAttributes) throws SQLException {
-        if (!includeAttributes){
+        if (includeAttributes == null || !includeAttributes){
             result.add(new Datum(id, rs.getString("value")));
         }else {
             if (rs.getDate("stop") != null) {
@@ -163,7 +163,7 @@ public class SqliteDatumRepository implements DatumRepository {
 
     private PreparedStatement findByTimeStatement(Connection con, StatusQuery query) throws SQLException {
         StringBuilder select = new StringBuilder();
-        if (query.getIncludeAttributes()){
+        if (query.getIncludeAttributes() != null && query.getIncludeAttributes()){
             select.append("SELECT unit_id, value, start, stop ");
         }else {
             select.append("SELECT unit_id, value ");

@@ -237,7 +237,7 @@ class DataAPI {
             response.setHeader(X_REQUEST_ID, requestId);
             response.setHeader(CONTENT_LANGUAGE, "no");
 
-            log.info("getStatus query with metadata query = {} and query = {}", metadataQuery, fixedQuery);
+            log.info("getFixed query with metadata query = {} and query = {}", metadataQuery, fixedQuery);
             Map dataStructure = dataService.getFixed(metadataQuery, fixedQuery);
 
             long elapsed = timer.stop().elapsed(TimeUnit.SECONDS);
