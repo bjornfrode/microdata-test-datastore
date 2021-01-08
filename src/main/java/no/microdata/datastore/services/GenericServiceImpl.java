@@ -9,17 +9,12 @@ import java.util.Map;
 @Service
 public class GenericServiceImpl implements GenericService {
 
-//    Skal returnere:
-//
-//            [
-//                {
-//                    "code": "no",
-//                        "label": "Norsk"
-//                }
-//            ]
 
     @Override
     public List<Map<String, Object>> findLanguages(String requestId) {
-        return List.of(Map.of("key", "GenericServiceImpl"));
+        return List.of(Map.of(
+                "code", "no",
+                "label", "Norsk"
+        ));
     }
 }
