@@ -1,0 +1,47 @@
+server:
+  port: 8080
+---
+datastore:
+  root: src/test/resources/no_ssb_test_datastore
+  metadata:
+    dir: ${datastore.root}/metadata
+    data-store: ${datastore.metadata.dir}/data-store.json
+    versions: ${datastore.metadata.dir}/versions.json
+#   MVP1 only
+    metadata-all: ${datastore.metadata.dir}/metadata-all-test__1_0_0.json
+  dataset:
+    dir: ${datastore.root}/dataset
+---
+info:
+  version: '@APPLICATION_VERSION@'
+---
+logging:
+  level:
+    'no':
+      microdata:
+        datastore: INFO
+    org:
+      apache:
+        http:
+          headers: INFO
+          wire: INFO
+---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  server:
+    port: 8081
+---
+spring:
+  application:
+    name: '@APPLICATION_NAME@'
+  boot:
+    admin:
+      url: ''
+  http:
+    encoding:
+      force: false
+  main:
+    banner-mode: 'off'
