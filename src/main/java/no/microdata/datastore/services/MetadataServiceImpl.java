@@ -6,6 +6,7 @@ import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
 import no.microdata.datastore.model.MetadataQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,22 +21,20 @@ public class MetadataServiceImpl implements MetadataService {
 
     private final static Logger log = LoggerFactory.getLogger(MetadataServiceImpl.class);
 
+    @Value("${datastore.metadata.metadata-all}")
+    private String metadataAllFile;
+
     @Override
     public Map getDataStructure(MetadataQuery metadataQuery) {
-        log.warn("Example implementation - hardcoded!");
-
         try {
             Map metadataAll = new ObjectMapper().readValue(
-                    Files.readString(Paths.get(
-                            "src/test/resources/no_ssb_test_datastore/metadata/metadata-all-test__1_0_0.json")), Map.class);
+                    Files.readString(Paths.get(metadataAllFile)), Map.class);
             List<Map> datasets = (List<Map>) metadataAll.get("dataStructures");
-
             for (Map dataset: datasets) {
                 if (Objects.equals(metadataQuery.getNames().get(0), dataset.get("name"))) {
                     return dataset;
                 }
             }
-
             throw new RuntimeException("Dataset with name " + metadataQuery.getNames().get(0) + " not found");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -44,12 +43,10 @@ public class MetadataServiceImpl implements MetadataService {
 
     @Override
     public Map getDataStructureVersion(DataStoreVersionQuery query) {
-        log.warn("Example implementation - hardcoded!");
-
+        log.warn("MVP1 implementation - hardcoded!");
         return Map.of(
                 "datastructureName", query.dataStructureName(),
                 "datastructureVersion", "1.0.0.0"
         );
     }
-
 }

@@ -3,6 +3,7 @@ package no.microdata.datastore.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.microdata.datastore.AllMetadataService;
 import no.microdata.datastore.model.MetadataQuery;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,12 +14,13 @@ import java.util.Map;
 @Service
 public class AllMetadataServiceImpl implements AllMetadataService {
 
+    @Value("${datastore.metadata.metadata-all}")
+    private String metadataAllFile;
+
     @Override
     public Map<String, Object> find(MetadataQuery query) {
         try {
-            return new ObjectMapper().readValue(
-                    Files.readString(Paths.get(
-                            "src/test/resources/no_ssb_test_datastore/metadata/metadata-all-test__1_0_0.json")), Map.class);
+            return new ObjectMapper().readValue(Files.readString(Paths.get(metadataAllFile)), Map.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
