@@ -2,9 +2,6 @@ server:
   port: 8080
 ---
 datastore:
-  description: Test data store
-  label: Data fra filer
-  name: no.ssb.file
   root: src/test/resources/no_ssb_test_datastore
   metadata:
     dir: ${datastore.root}/metadata
