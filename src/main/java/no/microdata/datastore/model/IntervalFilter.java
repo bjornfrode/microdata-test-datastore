@@ -15,7 +15,7 @@ public record IntervalFilter(int from, int to){
         }
         */
         //Hard-coding interval as currently not in use
-        interval = "0,999";
+        interval = "[0, 999]";
 
         var matcher = PATTERN.matcher(interval);
         boolean found = matcher.find();

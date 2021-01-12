@@ -20,4 +20,8 @@ public class MockConfig {
 
     @Bean
     public AllMetadataService allMetadataService(){return Mockito.mock(AllMetadataService.class);}
+
+    @Bean
+    public DataService dataService(){return Mockito.mock(DataService.class);}
+
 }
