@@ -7,8 +7,6 @@ import no.microdata.datastore.MockApplication;
 import no.microdata.datastore.MockConfig;
 import no.microdata.datastore.adapters.api.dto.Credentials;
 import no.microdata.datastore.adapters.api.dto.DataStoreVersionQuery;
-import no.microdata.datastore.model.*;
-import no.microdata.datastore.transformations.VersionUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -92,40 +90,15 @@ public class DataAPITest {
         LocalDate startDate = LocalDate.parse("2009-12-01");
         LocalDate endDate = LocalDate.parse("2012-08-31");
 
-        MetadataQuery metadataQuery = new MetadataQuery(Map.of(
-                "names", List.of("FNR"),
-                "languages", "no",
-                "requestId", "56",
-                "version", VersionUtils.toThreeLabelsIfNotDraft(DATASTORE_VERSION),
-                "includeAttributes", true
-        ));
-
-        Map parms = Map.of( "datasetName", metadataQuery.getNames().get(0),
-                            "version", DATASTRUCTURE_VERSION);
-        DatasetRevision datasetRevision = new DatasetRevision(parms);
-
-        Set<String> valueFilter = Stream.of("1","2","45","3","4")
-                .collect(Collectors.toCollection(HashSet::new));
-
-        EventQuery timePeriodQuery = new EventQuery(
-                new HashMap() {{
-                    put("datasetRevision", datasetRevision);
-                    put("startDate", LocalDate.ofEpochDay(startDate.toEpochDay()));
-                    put("endDate", LocalDate.ofEpochDay(endDate.toEpochDay()));
-                    put("requestId", "56");
-                    put("valueFilter", new ValueFilter(valueFilter));
-                    put("unitIdFilter",  UnitIdFilter.create(new HashSet<Long>(populationFilter)));
-                    put("intervalFilter", IntervalFilter.create("[0, 99]"));
-                    put("includeAttributes", true);
-                }});
+        Set<String> valueFilter = Stream.of("1","2","45","3","4").collect(Collectors.toCollection(HashSet::new));
 
         Map queryAsMap =
                 new HashMap() {{
                     put("version", DATASTORE_VERSION);
-                    put("dataStructureName", metadataQuery.getNames().get(0));
+                    put("dataStructureName", "FNR");
                     put("startDate", startDate.toEpochDay());
                     put("stopDate", endDate.toEpochDay());
-                    put("values", timePeriodQuery.getValueFilter().valueFilter());
+                    put("values", valueFilter);
                     put("population", Map.of("unitIds", populationFilter));
                     put("intervalFilter",  "[0, 999]");
                     put("credentials", Map.of( "username", Credentials.VALID_USERNAME,
@@ -143,8 +116,8 @@ public class DataAPITest {
         mockMvc.perform(RestDocumentationRequestBuilders.post("/data/data-structure/event")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(new ObjectMapper().writeValueAsString(queryAsMap))
-                    .header(Constants.X_REQUEST_ID, metadataQuery.getRequestId())
-                    .header(Constants.ACCEPT_LANGUAGE, metadataQuery.getLanguages())
+                    .header(Constants.X_REQUEST_ID, "56")
+                    .header(Constants.ACCEPT_LANGUAGE, "no")
                     .header(Constants.ACCEPT, Constants.ACCEPT_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -174,7 +147,6 @@ public class DataAPITest {
                         )));
     }
 
-
     @Test
     public void testGetStatus() throws Exception{
 
@@ -182,39 +154,14 @@ public class DataAPITest {
         Map expectedEvent = DataAPITestFixture.datastructureFnr();
         Long date = Long.valueOf(14579);
 
-        MetadataQuery metadataQuery = new MetadataQuery(Map.of(
-                "names", List.of("FNR"),
-                "languages", "no",
-                "requestId", "56",
-                "version", VersionUtils.toThreeLabelsIfNotDraft(DATASTORE_VERSION),
-                "includeAttributes", true
-        ));
-
-        Map parms = Map.of( "datasetName", metadataQuery.getNames().get(0),
-                "version", DATASTRUCTURE_VERSION);
-        DatasetRevision datasetRevision = new DatasetRevision(parms);
-
-        LocalDate startDate = LocalDate.parse("2009-12-01");
-        Set<String> valueFilter = Stream.of("1","2","45","3","4")
-                .collect(Collectors.toCollection(HashSet::new));
-
-        StatusQuery timeQuery = new StatusQuery(
-                new HashMap() {{
-                    put("datasetRevision", datasetRevision);
-                    put("date", LocalDate.ofEpochDay(startDate.toEpochDay()));
-                    put("requestId", "56");
-                    put("valueFilter", new ValueFilter(valueFilter));
-                    put("unitIdFilter",  UnitIdFilter.create(new HashSet<Long>(populationFilter)));
-                    put("intervalFilter", IntervalFilter.create("[0, 999]"));
-                    put("includeAttributes", true);
-                }});
+        Set<String> valueFilter = Stream.of("1","2","45","3","4").collect(Collectors.toCollection(HashSet::new));
 
         Map queryAsMap =
                 new HashMap() {{
                     put("version", DATASTORE_VERSION);
-                    put("dataStructureName", metadataQuery.getNames().get(0));
+                    put("dataStructureName", "FNR");
                     put("date", date);
-                    put("values", timeQuery.getValueFilter().valueFilter());
+                    put("values", valueFilter);
                     put("population", Map.of("unitIds", populationFilter));
                     put("intervalFilter",  "[0, 999]");
                     put("credentials", Map.of( "username", Credentials.VALID_USERNAME,
@@ -232,8 +179,8 @@ public class DataAPITest {
         mockMvc.perform(RestDocumentationRequestBuilders.post("/data/data-structure/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(queryAsMap))
-                .header(Constants.X_REQUEST_ID, metadataQuery.getRequestId())
-                .header(Constants.ACCEPT_LANGUAGE, metadataQuery.getLanguages())
+                .header(Constants.X_REQUEST_ID, "56")
+                .header(Constants.ACCEPT_LANGUAGE, "no")
                 .header(Constants.ACCEPT, Constants.ACCEPT_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -260,9 +207,7 @@ public class DataAPITest {
                                 HeaderDocumentation.headerWithName(Constants.CONTENT_TYPE).description(CONTENT_TYPE_DESCRIPTION),
                                 HeaderDocumentation.headerWithName(Constants.ACCEPT).description(ACCEPT_DESCRIPTION))
                         ));
-
     }
-
 
     @Test
     public void testGetFixed() throws Exception{
@@ -270,34 +215,14 @@ public class DataAPITest {
         List populationFilter = List.of(1, 2, 2, 3, 4);
         Map expectedEvent = DataAPITestFixture.datastructureFnr();
 
-        MetadataQuery metadataQuery = new MetadataQuery(Map.of(
-                "names", List.of("FNR"),
-                "languages", "no",
-                "requestId", "56",
-                "version", VersionUtils.toThreeLabelsIfNotDraft(DATASTORE_VERSION)
-        ));
-
-        Map parms = Map.of( "datasetName", metadataQuery.getNames().get(0),
-                "version", DATASTRUCTURE_VERSION);
-        DatasetRevision datasetRevision = new DatasetRevision(parms);
-
         Set<String> valueFilter = Stream.of("1","2","45","3","4")
                 .collect(Collectors.toCollection(HashSet::new));
-
-        FixedQuery fixedQuery = new FixedQuery(
-                new HashMap() {{
-                    put("datasetRevision", datasetRevision);
-                    put("requestId", "56");
-                    put("valueFilter", new ValueFilter(valueFilter));
-                    put("unitIdFilter",  UnitIdFilter.create(new HashSet<Long>(populationFilter)));
-                    put("intervalFilter", IntervalFilter.create("[0, 999]"));
-                }});
 
         Map queryAsMap =
                 new HashMap() {{
                     put("version", DATASTORE_VERSION);
-                    put("dataStructureName", metadataQuery.getNames().get(0));
-                    put("values", fixedQuery.getValueFilter().valueFilter());
+                    put("dataStructureName", "FNR");
+                    put("values", valueFilter);
                     put("population", Map.of("unitIds", populationFilter));
                     put("intervalFilter",  "[0, 999]");
                     put("credentials", Map.of( "username", Credentials.VALID_USERNAME,
@@ -314,8 +239,8 @@ public class DataAPITest {
         mockMvc.perform(RestDocumentationRequestBuilders.post("/data/data-structure/fixed")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(queryAsMap))
-                .header(Constants.X_REQUEST_ID, metadataQuery.getRequestId())
-                .header(Constants.ACCEPT_LANGUAGE, metadataQuery.getLanguages())
+                .header(Constants.X_REQUEST_ID, "56")
+                .header(Constants.ACCEPT_LANGUAGE, "no")
                 .header(Constants.ACCEPT, Constants.ACCEPT_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
