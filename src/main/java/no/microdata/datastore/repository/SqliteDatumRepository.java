@@ -12,6 +12,7 @@ import org.sqlite.SQLiteConfig;
 import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,7 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 @Repository
 public class SqliteDatumRepository implements DatumRepository {
+
     private static final Logger log = LoggerFactory.getLogger(SqliteDatumRepository.class);
+    private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     private SQLiteConfig sqLiteConfig;
 
@@ -138,10 +141,10 @@ public class SqliteDatumRepository implements DatumRepository {
                     new Datum(
                             id,
                             rs.getString("value"),
-                            rs.getString("start") != null ?
-                                    LocalDate.parse(rs.getString("start")) : null,
-                            rs.getString("stop") != null ?
-                                    LocalDate.parse(rs.getString("stop")) : null
+                            rs.getObject("start") != null ?
+                                    LocalDate.parse(String.valueOf(rs.getInt("start")), DATE_TIME_FORMAT) : null,
+                            rs.getObject("stop") != null ?
+                                    LocalDate.parse(String.valueOf(rs.getInt("stop")), DATE_TIME_FORMAT) : null
                     ));
         }
     }
@@ -163,13 +166,13 @@ public class SqliteDatumRepository implements DatumRepository {
             createINSqlClause(select, valueFilter.valueFilter().size());
         }
 
-        String time = query.getDate().toString();
+        Integer time = getDateAsInteger(query.getDate());
         PreparedStatement stmt = con.prepareStatement(select.toString());
         stmt.setInt(1, query.getIntervalFilter().from());
         stmt.setInt(2, query.getIntervalFilter().to());
-        stmt.setString(3, time);
-        stmt.setString(4, time);
-        stmt.setString(5, time);
+        stmt.setInt(3, time);
+        stmt.setInt(4, time);
+        stmt.setInt(5, time);
 
         if (valueFilter.hasValues()) {
             insertValueFilterInStatement(6, valueFilter, stmt);
@@ -252,13 +255,13 @@ public class SqliteDatumRepository implements DatumRepository {
         PreparedStatement stmt = con.prepareStatement(select.toString());
         stmt.setInt(1, query.getIntervalFilter().from());
         stmt.setInt(2, query.getIntervalFilter().to());
-        stmt.setString(3, query.getStartDate().toString());
-        stmt.setString(4, query.getStartDate().toString());
-        stmt.setString(5, query.getStartDate().toString());
-        stmt.setString(6, query.getStartDate().toString());
-        stmt.setString(7, query.getEndDate().toString());
-        stmt.setString(8, query.getStartDate().toString());
-        stmt.setString(9, query.getEndDate().toString());
+        stmt.setInt(3, getDateAsInteger(query.getStartDate()));
+        stmt.setInt(4, getDateAsInteger(query.getStartDate()));
+        stmt.setInt(5, getDateAsInteger(query.getStartDate()));
+        stmt.setInt(6, getDateAsInteger(query.getStartDate()));
+        stmt.setInt(7, getDateAsInteger(query.getEndDate()));
+        stmt.setInt(8, getDateAsInteger(query.getStartDate()));
+        stmt.setInt(9, getDateAsInteger(query.getEndDate()));
 
         if (query.getValueFilter().hasValues()) {
             insertValueFilterInStatement(10, query.getValueFilter(), stmt);
@@ -288,4 +291,7 @@ public class SqliteDatumRepository implements DatumRepository {
         return array.length > 0 ? "SELECT" + array[array.length - 1] : "";
     }
 
+    static Integer getDateAsInteger(LocalDate localDate) {
+        return Integer.valueOf(localDate.format(DATE_TIME_FORMAT));
+    }
 }
