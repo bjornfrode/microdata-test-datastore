@@ -1,7 +1,6 @@
 package no.microdata.datastore.repository;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.base.Strings;
 import no.microdata.datastore.model.*;
 import no.microdata.datastore.transformations.VersionUtils;
 import org.slf4j.Logger;
@@ -13,7 +12,9 @@ import org.sqlite.SQLiteConfig;
 import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -268,65 +269,6 @@ public class SqliteDatumRepository implements DatumRepository {
 
     static boolean isInFilter(UnitIdFilter unitIdFilter, Long id) {
         return unitIdFilter.unitIds().contains(id);
-    }
-
-    @Override
-    public Map<String, Object> findTemporalDates(DatasetRevision datasetRevision) {
-        Map temporaldates = findTemporalCoverageDates(datasetRevision);
-        List<String> temporalStatusDates = findTemporalStatusDates(datasetRevision);
-        temporaldates.put("temporalStatusDates", temporalStatusDates);
-        return temporaldates;
-    }
-
-    private Map<String, Object> findTemporalCoverageDates(DatasetRevision datasetRevision) {
-        String select =
-                "SELECT " +
-                        "MIN(start) AS \"START_MIN\", " +
-                        "MAX(CASE WHEN start > stop THEN start ELSE stop END) AS \"STOP_START_MAX\" " +
-                        "FROM `fdb_raird`.`" + getTableName(datasetRevision) + "`";
-
-        Map map = new HashMap();
-        String start = null, stop = null;
-        try (Connection con = getConnection(datasetRevision)) {
-            PreparedStatement stmt = con.prepareStatement(select);
-            logDBPropertiesAndSQL(con, stmt);
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                start = rs.getString("START_MIN");
-                stop = rs.getString("STOP_START_MAX");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        if (!Strings.isNullOrEmpty(start)) {
-            map.put("temporalCoverageStart", start);
-        }
-        if (!Strings.isNullOrEmpty(stop)) {
-            map.put("temporalCoverageLatest", stop);
-        }
-        return map;
-    }
-
-    private List<String> findTemporalStatusDates(DatasetRevision datasetRevision) {
-        String select =
-                "SELECT DISTINCT start " +
-                        "FROM `fdb_raird`.`" + getTableName(datasetRevision) + "` " +
-                        "ORDER BY start";
-
-        List list = new ArrayList<String>();
-        try (Connection con = getConnection(datasetRevision)) {
-            PreparedStatement stmt = con.prepareStatement(select);
-            logDBPropertiesAndSQL(con, stmt);
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                list.add(rs.getString("start"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return list;
     }
 
     static void logDBPropertiesAndSQL(Connection con, PreparedStatement stmt) throws SQLException {
