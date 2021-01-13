@@ -1,4 +1,4 @@
-= Metadatastore Rest API
+= Test Datastore Rest API
 ;
 :doctype: book
 :source-highlighter: highlightjs
@@ -11,7 +11,9 @@
 
 [[overview]]
 = Overview
-Rest API for returning metadata from a Datastore. Every resource return either JSON or Message Pack format.
+Rest API for returning data and metadata from a Datastore designed to test third party"s synthetic collections.
+Every resource return either JSON or Message Pack format.
+The data store exposed by this API is a collection of directories, json files and SQLite databases.
 
 == Authentication
 This is an open API without any authentication.
@@ -22,8 +24,101 @@ We use conventional HTTP response codes to indicate the success or failure of an
 == Request IDs
 Each API request has an system-wide request identifier. You can identify this value in the response headers, under `x-request-id`.
 
-[[resources]]
-== Resources
+[[resources-data-and-metadata]]
+== Resources for Data and Metadata
+
+== Datastore
+The `Datastore` resource
+
+[[resources-datastore]]
+=== Retrieve data store
+
+Gets information about the data store.
+
+== Datastructure
+The `Datastructure`resource.
+
+[[resources-event]]
+=== Retrieve event datastructures
+
+Gets an event Datastructure.
+
+==== Request headers
+
+include::{snippets}/getEvent/request-headers.adoc[]
+
+==== Request structure
+
+include::{snippets}/getEvent/request-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/getEvent-request/curl-request.adoc[]
+
+include::{snippets}/getEvent-request/http-request.adoc[]
+
+==== Response structure
+
+TBA
+
+==== Example response
+
+include::{snippets}/getEvent/http-response.adoc[]
+
+
+[[resources-status]]
+=== Retrieve status datastructure
+
+Gets a status Datastructure.
+
+==== Request headers
+
+include::{snippets}/getStatus/request-headers.adoc[]
+
+==== Request structure
+
+include::{snippets}/getStatus/request-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/getStatus-request/curl-request.adoc[]
+
+include::{snippets}/getStatus-request/http-request.adoc[]
+
+==== Response structure
+
+TBA
+
+==== Example response
+
+include::{snippets}/getStatus/http-response.adoc[]
+
+
+[[resources-fixed]]
+=== Retrieve fixed datastructure
+
+Gets a fixed Datastructure.
+
+==== Request headers
+
+include::{snippets}/getFixed/request-headers.adoc[]
+
+==== Request structure
+
+include::{snippets}/getFixed/request-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/getFixed-request/curl-request.adoc[]
+
+include::{snippets}/getFixed-request/http-request.adoc[]
+
+==== Response structure
+
+TBA
+
+[[resources-metadata-only]]
+== Resources for Metadata only
 
 == Language
 The `Language` resource.
@@ -150,3 +245,4 @@ include::{snippets}/getAllMetadata/http-request.adoc[]
 ==== Example response
 
 include::{snippets}/getAllMetadata/http-response.adoc[]
+

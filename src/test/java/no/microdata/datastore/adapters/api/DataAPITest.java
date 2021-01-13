@@ -124,7 +124,7 @@ public class DataAPITest {
                 .andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE_JSON))
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(expectedEvent)))
                 .andDo(document("getEvent-request", Preprocessors.preprocessRequest(maskPassword())))
-                .andDo(document("getDataStructures",
+                .andDo(document("getEvent",
                         Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         requestFields(
                                 fieldWithPath("version").description(VERSION_DESCRIPTION),
