@@ -92,3 +92,14 @@ dependencyCheck {
     failBuildOnCVSS=7.0
     format = org.owasp.dependencycheck.reporting.ReportGenerator.Format.ALL
 }
+
+springBoot {
+    mainClass = "no.microdata.datastore.DatastoreApplication"
+    buildInfo {
+        properties {
+            additional = [
+                    'info.version': applicationVersion
+            ]
+        }
+    }
+}

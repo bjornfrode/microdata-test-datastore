@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
 
-    <property resource="application.yaml" />
     <conversionRule conversionWord="stack" converterClass="net.logstash.logback.stacktrace.ShortenedThrowableConverter" />
+
+    <springProperty name="infoVersion" source="info.version"/>
+    <springProperty name="serviceName" source="spring.application.name"/>
 
     <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
@@ -29,8 +31,8 @@
                     <pattern>   {
                         "schemaVersion": "v3",
                         "levelName": "%level",
-                        "serviceVersion": "${info.version}",
-                        "serviceName": "${spring.application.name}",
+                        "serviceVersion": "${infoVersion}",
+                        "serviceName": "${serviceName}",
                         "xRequestId": "%mdc{xRequestId}",
                         "method": "%mdc{method}",
                         "url": "%mdc{url}",
@@ -46,9 +48,25 @@
         </encoder>
     </appender>
 
-    <root level="info">
-        <appender-ref ref="JSON"/>
-    </root>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%highlight(%d{HH:mm:ss.SSS}) %highlight([%thread]) %highlight(%-5level) %highlight(%logger{1}) %highlight(- %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+    <!-- configuration to be enabled when the "dev" profile is not active -->
+    <springProfile name="!dev">
+        <root level="INFO">
+            <appender-ref ref="JSON"/>
+        </root>
+    </springProfile>
 
 </configuration>
 

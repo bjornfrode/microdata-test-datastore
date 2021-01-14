@@ -13,7 +13,7 @@ datastore:
     dir: ${datastore.root}/dataset
 ---
 info:
-  version: '@APPLICATION_VERSION@'
+  version: @APPLICATION_VERSION@
 ---
 logging:
   level:
@@ -36,12 +36,13 @@ management:
 ---
 spring:
   application:
-    name: '@APPLICATION_NAME@'
+    name: @APPLICATION_NAME@
   boot:
     admin:
-      url: ''
-  http:
-    encoding:
-      force: false
+      url:
   main:
     banner-mode: 'off'
+server:
+  servlet:
+    encoding:
+      force: false
