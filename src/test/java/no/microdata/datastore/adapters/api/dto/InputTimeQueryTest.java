@@ -96,7 +96,7 @@ public class InputTimeQueryTest {
         inputQuery.setCredentials(credentials);
 
         String expected = "InputTimeQuery[date=1259649003000, dataStructureName='KJONN', version='null', " +
-                "values=null, population=0, intervalFilter='null', includeAttributes=null]";
+                "values=null, population=0, intervalFilter='null', includeAttributes=false]";
         String actual = inputQuery.toString();
 
         assertEquals(expected, actual);

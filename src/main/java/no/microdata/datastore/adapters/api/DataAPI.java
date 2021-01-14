@@ -33,11 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static no.microdata.datastore.adapters.api.Constants.*;
@@ -264,7 +260,7 @@ class DataAPI {
     }
 
     private static ValueFilter createValueFilter(InputQuery inputQuery) {
-        return inputQuery.hasValueFilter() ? new ValueFilter((Set<String>) inputQuery.getValues()) : ValueFilter.noFilterInstance();
+        return inputQuery.hasValueFilter() ? new ValueFilter(new HashSet<>(inputQuery.getValues())) : ValueFilter.noFilterInstance();
     }
 
     private static UnitIdFilter createUnitIdFilter(InputQuery inputQuery) {

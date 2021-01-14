@@ -22,7 +22,7 @@ public abstract class InputQuery {
     String intervalFilter;
 
     Credentials credentials;
-    Boolean includeAttributes;
+    Boolean includeAttributes = false;
 
     boolean validate() {
         if (!credentials.isValid())

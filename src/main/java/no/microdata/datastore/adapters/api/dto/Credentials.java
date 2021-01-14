@@ -4,8 +4,9 @@ import java.util.Map;
 
 public class Credentials {
 
-    final static String VALID_USERNAME = "StatCommandRunner";
-    final static String VALID_PASSWORD = "ValidPass";
+    public static final String VALID_USERNAME = "StatCommandRunner";
+    public static final String VALID_PASSWORD = "ValidPass";
+
     final static Map ERROR_MESSAGE =
             Map.of(
                     "type", "AUTHENTICATION_FAILURE",
