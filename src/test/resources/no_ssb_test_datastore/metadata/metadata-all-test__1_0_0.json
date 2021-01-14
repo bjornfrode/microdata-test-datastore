@@ -182,7 +182,7 @@
             "measureVariable": {
                 "dataType": "Long",
                 "label": "Inntekt etter skatt",
-                "name": "INNTEKT_WIES",
+                "name": "TEST_PERSON_INCOME",
                 "representedVariables": [
                     {
                         "description": "Yrkesinntekter, kapitalinntekter, skattepliktige og skattefrie overf\u00f8ringer, i l\u00f8pet av kalender\u00e5ret. Utlignet skatt og negative overf\u00f8ringer er trukket i fra.\n Variabelen omfatter bosatte per 31.12.\u00c5\u00c5\u00c5\u00c5. Personer med verdiene 0 og uoppgitt (missing) er utelatt.",
@@ -198,7 +198,7 @@
                 ],
                 "variableRole": "Measure"
             },
-            "name": "INNTEKT_WIES",
+            "name": "TEST_PERSON_INCOME",
             "populationDescription": "Bosatte i Norge",
             "subjectFields": [
                 "Inntekt og forbruk",
@@ -282,7 +282,7 @@
             "measureVariable": {
                 "dataType": "Double",
                 "label": "Samlet inntekt",
-                "name": "INNTEKT_WSAMINNT_KORRIGERT",
+                "name": "TEST_PERSON_PETS",
                 "representedVariables": [
                     {
                         "description": "Yrkesinntekt, kapitalinntekt, skattepliktige og skattefrie overf\u00f8ringer mottatt i l\u00f8pet av kalender\u00e5ret. Negative bel\u00f8p kan forekomme.\n Variabelen omfatter bosatte per 31.12.\u00c5\u00c5\u00c5\u00c5. Personer med verdiene 0 og uoppgitt (missing) er utelatt.",
@@ -298,7 +298,7 @@
                 ],
                 "variableRole": "Measure"
             },
-            "name": "INNTEKT_WSAMINNT_KORRIGERT",
+            "name": "TEST_PERSON_PETS",
             "populationDescription": "Bosatte i Norge",
             "subjectFields": [
                 "Inntekt og forbruk",
@@ -309,106 +309,6 @@
                 "stop": 17531
             },
             "temporality": "ACCUMULATED"
-        },
-        {
-            "attributeVariables": [
-                {
-                    "dataType": "Instant",
-                    "label": "Stoppdato",
-                    "name": "STOP",
-                    "representedVariables": [
-                        {
-                            "description": "Stoppdato/sluttdato for hendelsen",
-                            "validPeriod": {
-                                "start": 14975,
-                                "stop": 18230
-                            },
-                            "valueDomain": {
-                                "description": "N/A",
-                                "unitOfMeasure": "N/A"
-                            }
-                        }
-                    ],
-                    "variableRole": "Stop"
-                },
-                {
-                    "dataType": "Instant",
-                    "label": "Startdato",
-                    "name": "START",
-                    "representedVariables": [
-                        {
-                            "description": "Startdato/m\u00e5letidspunktet for hendelsen",
-                            "validPeriod": {
-                                "start": 14975,
-                                "stop": 18230
-                            },
-                            "valueDomain": {
-                                "description": "N/A",
-                                "unitOfMeasure": "N/A"
-                            }
-                        }
-                    ],
-                    "variableRole": "Start"
-                }
-            ],
-            "identifierVariables": [
-                {
-                    "dataType": "Long",
-                    "format": "RandomUInt48",
-                    "keyType": {
-                        "description": "Statistisk enhet er person (individ, enkeltmenenske)",
-                        "label": "Person",
-                        "name": "PERSON"
-                    },
-                    "label": "Personidentifikator",
-                    "name": "PERSONID_1",
-                    "representedVariables": [
-                        {
-                            "description": "Identifikator for person i RAIRD",
-                            "validPeriod": {
-                                "start": 14975,
-                                "stop": 18230
-                            },
-                            "valueDomain": {
-                                "description": "N/A",
-                                "unitOfMeasure": "N/A"
-                            }
-                        }
-                    ],
-                    "variableRole": "Identifier"
-                }
-            ],
-            "languageCode": "no",
-            "measureVariable": {
-                "dataType": "Long",
-                "label": "Alderspensjon fra folketrygden, uttaksgrad",
-                "name": "ALDPENSJ2011FDT_GRAD",
-                "representedVariables": [
-                    {
-                        "description": "Angir uttaksgrad av alderspensjon",
-                        "validPeriod": {
-                            "start": 14975,
-                            "stop": 18230
-                        },
-                        "valueDomain": {
-                            "description": "PROSENT",
-                            "unitOfMeasure": "PROSENT"
-                        }
-                    }
-                ],
-                "variableRole": "Measure"
-            },
-            "name": "ALDPENSJ2011FDT_GRAD",
-            "populationDescription": "Hovedsakelig bosatte i Norge (fnr), men noen ikke-bosatte kan inng\u00e5 (dnr)",
-            "subjectFields": [
-                "Sosiale forhold og kriminalitet",
-                "Trygd og st\u00f8nad"
-            ],
-            "temporalCoverage": {
-                "start": 14975,
-                "stop": 18230
-            },
-            "temporality": "EVENT"
         }
     ]
 }
