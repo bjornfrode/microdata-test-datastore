@@ -7,4 +7,4 @@ VOLUME /tmp
 ADD build/libs/microdata-test-datastore-*.jar app.jar
 RUN sh -c 'touch /app.jar' && \
     date +%Z
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+ENTRYPOINT ["java","--enable-preview","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
