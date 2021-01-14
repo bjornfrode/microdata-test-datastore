@@ -21,7 +21,7 @@ sourceCompatibility = '15'
 
 // Replacing placeholder in application.properties with name and version
 processResources{
-    filesMatching('application.properties') {
+    filesMatching('application.yaml') {
         filter ReplaceTokens, tokens: [APPLICATION_VERSION: new String(applicationVersion),
                                        APPLICATION_NAME   : new String(applicationTitle)]
     }
@@ -63,11 +63,24 @@ test {
 }
 
 bootJar {
+    archiveBaseName = applicationTitle.toLowerCase()
+    archiveVersion = applicationVersion
     dependsOn asciidoctor
     from ("${asciidoctor.outputDir}/html5") {
         into 'static/docs'
     }
+
+    //    Local js and css so the docs works behind firewall
+    from ("$rootDir/src/main/resources/rest-docs") {
+        into 'static/docs/js'
+    }
+
+    manifest {
+        attributes("Implementation-Title": applicationTitle,
+                "Implementation-Version": applicationVersion)
+    }
 }
+
 
 asciidoctor {
     inputs.dir snippetsDir
