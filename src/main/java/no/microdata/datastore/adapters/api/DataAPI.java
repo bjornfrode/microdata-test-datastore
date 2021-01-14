@@ -261,8 +261,6 @@ class DataAPI {
 
     private static ValueFilter createValueFilter(InputQuery inputQuery) {
         return inputQuery.hasValueFilter() ? new ValueFilter(new HashSet<>(inputQuery.getValues())) : ValueFilter.noFilterInstance();
-
-        //return inputQuery.hasValueFilter() ? new ValueFilter((Set<String>) inputQuery.getValues()) : ValueFilter.noFilterInstance();
     }
 
     private static UnitIdFilter createUnitIdFilter(InputQuery inputQuery) {

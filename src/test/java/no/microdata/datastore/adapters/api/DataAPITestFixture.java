@@ -8,203 +8,204 @@ import java.util.Map;
 class DataAPITestFixture {
 
     static final Map datastructureFnr() throws JsonProcessingException {
-
-        String json = "{\n" +
-                "  \"attributeVariables\": [\n" +
-                "    {\n" +
-                "      \"name\": \"END\",\n" +
-                "      \"label\": \"End\",\n" +
-                "      \"dataType\": \"Instant\",\n" +
-                "      \"representedVariables\": [\n" +
-                "        {\n" +
-                "          \"validPeriod\": {\n" +
-                "            \"start\": 946681200\n" +
-                "          },\n" +
-                "          \"valueDomain\": {\n" +
-                "            \"missingValues\": [\n" +
-                "              \n" +
-                "            ],\n" +
-                "            \"codeList\": [\n" +
-                "              {\n" +
-                "                \"category\": \"0 - 19,9 timer\",\n" +
-                "                \"code\": 1\n" +
-                "              },\n" +
-                "              {\n" +
-                "                \"category\": \"20 - 29,9 timer\",\n" +
-                "                \"code\": 2\n" +
-                "              },\n" +
-                "              {\n" +
-                "                \"category\": \"30 timer og mer\",\n" +
-                "                \"code\": 3\n" +
-                "              }\n" +
-                "            ]\n" +
-                "          },\n" +
-                "          \"description\": \"Stoppdato for forløpsdata.\"\n" +
-                "        }\n" +
-                "      ],\n" +
-                "      \"unitType\": {\n" +
-                "        \"description\": \"Person\",\n" +
-                "        \"label\": \"Person\",\n" +
-                "        \"name\": \"PERSON\"\n" +
-                "      },\n" +
-                "      \"variableRole\": \"Stop\",\n" +
-                "      \"datums\": [\n" +
-                "        11323,\n" +
-                "        11688,\n" +
-                "        11323,\n" +
-                "        11688,\n" +
-                "        11323\n" +
-                "      ]\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"dataType\": \"Instant\",\n" +
-                "      \"label\": \"Start\",\n" +
-                "      \"name\": \"START\",\n" +
-                "      \"unitType\": {\n" +
-                "        \"description\": \"Person\",\n" +
-                "        \"label\": \"Person\",\n" +
-                "        \"name\": \"PERSON\"\n" +
-                "      },\n" +
-                "      \"representedVariables\": [\n" +
-                "        {\n" +
-                "          \"validPeriod\": {\n" +
-                "            \"start\": 946681200\n" +
-                "          },\n" +
-                "          \"valueDomain\": {\n" +
-                "            \"missingValues\": [\n" +
-                "              \n" +
-                "            ],\n" +
-                "            \"codeList\": [\n" +
-                "              {\n" +
-                "                \"category\": \"0 - 19,9 timer\",\n" +
-                "                \"code\": 1\n" +
-                "              },\n" +
-                "              {\n" +
-                "                \"category\": \"20 - 29,9 timer\",\n" +
-                "                \"code\": 2\n" +
-                "              },\n" +
-                "              {\n" +
-                "                \"category\": \"30 timer og mer\",\n" +
-                "                \"code\": 3\n" +
-                "              }\n" +
-                "            ]\n" +
-                "          },\n" +
-                "          \"description\": \"Startdato for forløpsdata eller måletidspunkt for statusdata/tverrsnittsdata.\"\n" +
-                "        }\n" +
-                "      ],\n" +
-                "      \"variableRole\": \"Start\",\n" +
-                "      \"datums\": [\n" +
-                "        10957,\n" +
-                "        11323,\n" +
-                "        10957,\n" +
-                "        11323,\n" +
-                "        10957\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"identifierVariables\": [\n" +
-                "    {\n" +
-                "      \"label\": \"Fødselsnummer kryptert (HASH)\",\n" +
-                "      \"dataType\": \"String\",\n" +
-                "      \"name\": \"FNR_HASH\",\n" +
-                "      \"unitType\": {\n" +
-                "        \"description\": \"Person\",\n" +
-                "        \"label\": \"Person\",\n" +
-                "        \"name\": \"PERSON\"\n" +
-                "      },\n" +
-                "      \"representedVariables\": [\n" +
-                "        {\n" +
-                "          \"validPeriod\": {\n" +
-                "            \"start\": 946681200\n" +
-                "          },\n" +
-                "          \"valueDomain\": {\n" +
-                "            \"missingValues\": [\n" +
-                "              \n" +
-                "            ],\n" +
-                "            \"codeList\": [\n" +
-                "              {\n" +
-                "                \"category\": \"0 - 19,9 timer\",\n" +
-                "                \"code\": 1\n" +
-                "              },\n" +
-                "              {\n" +
-                "                \"category\": \"20 - 29,9 timer\",\n" +
-                "                \"code\": 2\n" +
-                "              },\n" +
-                "              {\n" +
-                "                \"category\": \"30 timer og mer\",\n" +
-                "                \"code\": 3\n" +
-                "              }\n" +
-                "            ]\n" +
-                "          },\n" +
-                "          \"description\": \"Person identifisert med kryptert (HASH) fødselsnummer.\"\n" +
-                "        }\n" +
-                "      ],\n" +
-                "      \"variableRole\": \"Identifier\",\n" +
-                "      \"datums\": [\n" +
-                "        1,\n" +
-                "        2,\n" +
-                "        2,\n" +
-                "        3,\n" +
-                "        4\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"measureVariable\": {\n" +
-                "    \"dataType\": \"String\",\n" +
-                "    \"label\": \"Fødselsnummer\",\n" +
-                "    \"name\": \"FNR\",\n" +
-                "    \"unitType\": {\n" +
-                "      \"description\": \"Person\",\n" +
-                "      \"label\": \"Person\",\n" +
-                "      \"name\": \"PERSON\"\n" +
-                "    },\n" +
-                "    \"representedVariables\": [\n" +
-                "      {\n" +
-                "        \"validPeriod\": {\n" +
-                "          \"start\": 946681200\n" +
-                "        },\n" +
-                "        \"valueDomain\": {\n" +
-                "          \"missingValues\": [\n" +
-                "            \n" +
-                "          ],\n" +
-                "          \"codeList\": [\n" +
-                "            {\n" +
-                "              \"category\": \"0 - 19,9 timer\",\n" +
-                "              \"code\": 1\n" +
-                "            },\n" +
-                "            {\n" +
-                "              \"category\": \"20 - 29,9 timer\",\n" +
-                "              \"code\": 2\n" +
-                "            },\n" +
-                "            {\n" +
-                "              \"category\": \"30 timer og mer\",\n" +
-                "              \"code\": 3\n" +
-                "            }\n" +
-                "          ]\n" +
-                "        },\n" +
-                "        \"description\": \"Variabelen viser fødselsnummer, det vil si fødselsdag, -måned og -år (6 siffer) og personnummer (5 siffer)\"\n" +
-                "      }\n" +
-                "    ],\n" +
-                "    \"variableRole\": \"Measure\",\n" +
-                "    \"datums\": [\n" +
-                "      \"1\",\n" +
-                "      \"2\",\n" +
-                "      \"45\",\n" +
-                "      \"3\",\n" +
-                "      \"4\"\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  \"name\": \"FNR\",\n" +
-                "  \"temporality\": \"Event\",\n" +
-                "  \"temporalCoverage\": {\n" +
-                "    \"start\": 946681200,\n" +
-                "    \"stop\": 1419980400\n" +
-                "  },\n" +
-                "  \"subjectFields\": [\n" +
-                "    \"ARBEID_LONN\"\n" +
-                "  ],\n" +
-                "  \"languageCode\": \"no\"\n" +
-                "}";
+        String json = """
+                {
+                  "attributeVariables": [
+                    {
+                      "name": "END",
+                      "label": "End",
+                      "dataType": "Instant",
+                      "representedVariables": [
+                        {
+                          "validPeriod": {
+                            "start": 946681200
+                          },
+                          "valueDomain": {
+                            "missingValues": [
+                             \s
+                            ],
+                            "codeList": [
+                              {
+                                "category": "0 - 19,9 timer",
+                                "code": 1
+                              },
+                              {
+                                "category": "20 - 29,9 timer",
+                                "code": 2
+                              },
+                              {
+                                "category": "30 timer og mer",
+                                "code": 3
+                              }
+                            ]
+                          },
+                          "description": "Stoppdato for forløpsdata."
+                        }
+                      ],
+                      "unitType": {
+                        "description": "Person",
+                        "label": "Person",
+                        "name": "PERSON"
+                      },
+                      "variableRole": "Stop",
+                      "datums": [
+                        11323,
+                        11688,
+                        11323,
+                        11688,
+                        11323
+                      ]
+                    },
+                    {
+                      "dataType": "Instant",
+                      "label": "Start",
+                      "name": "START",
+                      "unitType": {
+                        "description": "Person",
+                        "label": "Person",
+                        "name": "PERSON"
+                      },
+                      "representedVariables": [
+                        {
+                          "validPeriod": {
+                            "start": 946681200
+                          },
+                          "valueDomain": {
+                            "missingValues": [
+                             \s
+                            ],
+                            "codeList": [
+                              {
+                                "category": "0 - 19,9 timer",
+                                "code": 1
+                              },
+                              {
+                                "category": "20 - 29,9 timer",
+                                "code": 2
+                              },
+                              {
+                                "category": "30 timer og mer",
+                                "code": 3
+                              }
+                            ]
+                          },
+                          "description": "Startdato for forløpsdata eller måletidspunkt for statusdata/tverrsnittsdata."
+                        }
+                      ],
+                      "variableRole": "Start",
+                      "datums": [
+                        10957,
+                        11323,
+                        10957,
+                        11323,
+                        10957
+                      ]
+                    }
+                  ],
+                  "identifierVariables": [
+                    {
+                      "label": "Fødselsnummer kryptert (HASH)",
+                      "dataType": "String",
+                      "name": "FNR_HASH",
+                      "unitType": {
+                        "description": "Person",
+                        "label": "Person",
+                        "name": "PERSON"
+                      },
+                      "representedVariables": [
+                        {
+                          "validPeriod": {
+                            "start": 946681200
+                          },
+                          "valueDomain": {
+                            "missingValues": [
+                             \s
+                            ],
+                            "codeList": [
+                              {
+                                "category": "0 - 19,9 timer",
+                                "code": 1
+                              },
+                              {
+                                "category": "20 - 29,9 timer",
+                                "code": 2
+                              },
+                              {
+                                "category": "30 timer og mer",
+                                "code": 3
+                              }
+                            ]
+                          },
+                          "description": "Person identifisert med kryptert (HASH) fødselsnummer."
+                        }
+                      ],
+                      "variableRole": "Identifier",
+                      "datums": [
+                        1,
+                        2,
+                        2,
+                        3,
+                        4
+                      ]
+                    }
+                  ],
+                  "measureVariable": {
+                    "dataType": "String",
+                    "label": "Fødselsnummer",
+                    "name": "FNR",
+                    "unitType": {
+                      "description": "Person",
+                      "label": "Person",
+                      "name": "PERSON"
+                    },
+                    "representedVariables": [
+                      {
+                        "validPeriod": {
+                          "start": 946681200
+                        },
+                        "valueDomain": {
+                          "missingValues": [
+                          
+                          ],
+                          "codeList": [
+                            {
+                              "category": "0 - 19,9 timer",
+                              "code": 1
+                            },
+                            {
+                              "category": "20 - 29,9 timer",
+                              "code": 2
+                            },
+                            {
+                              "category": "30 timer og mer",
+                              "code": 3
+                            }
+                          ]
+                        },
+                        "description": "Variabelen viser fødselsnummer, det vil si fødselsdag, -måned og -år (6 siffer) og personnummer (5 siffer)"
+                      }
+                    ],
+                    "variableRole": "Measure",
+                    "datums": [
+                      "1",
+                      "2",
+                      "45",
+                      "3",
+                      "4"
+                    ]
+                  },
+                  "name": "FNR",
+                  "temporality": "Event",
+                  "temporalCoverage": {
+                    "start": 946681200,
+                    "stop": 1419980400
+                  },
+                  "subjectFields": [
+                    "ARBEID_LONN"
+                  ],
+                  "languageCode": "no"
+                }                
+                """;
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = mapper.readValue(json, Map.class);
