@@ -64,7 +64,9 @@
     <!-- configuration to be enabled when the "dev" profile is not active -->
     <springProfile name="!dev">
         <root level="INFO">
-            <appender-ref ref="JSON"/>
+<!--            JUST FOR TESTING -->
+<!--            <appender-ref ref="JSON"/>-->
+            <appender-ref ref="STDOUT"/>
         </root>
     </springProfile>
 
