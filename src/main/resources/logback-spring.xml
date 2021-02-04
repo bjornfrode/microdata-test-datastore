@@ -39,7 +39,7 @@
                         "statusCode": "#asLong{%mdc{statusCode}}",
                         "responseTime": "#asLong{%mdc{responseTime}}",
                         "message": "%message",
-                        "error.stack": "[%thread] - %msg%n%stack{full,full,full,rootFirst,regex1,regex2,evaluatorName}"
+                        "error": "[%thread] - %msg%n%stack{full,full,full,rootFirst,regex1,regex2,evaluatorName}"
                         }
                     </pattern>
                 </pattern>
@@ -64,9 +64,7 @@
     <!-- configuration to be enabled when the "dev" profile is not active -->
     <springProfile name="!dev">
         <root level="INFO">
-<!--            JUST FOR TESTING -->
-<!--            <appender-ref ref="JSON"/>-->
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="JSON"/>
         </root>
     </springProfile>
 
