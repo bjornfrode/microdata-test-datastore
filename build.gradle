@@ -45,7 +45,6 @@ dependencies {
     implementation platform('com.google.cloud:libraries-bom:16.3.0')
 
     implementation 'com.google.cloud:google-cloud-storage'
-    implementation 'com.google.auth:google-auth-library-appengine:0.23.0'
 
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
