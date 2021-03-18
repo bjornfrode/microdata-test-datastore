@@ -2,13 +2,13 @@ server:
   port: 8080
 ---
 datastore:
-  root: src/test/resources/no_ssb_test_datastore
+  root: src/test/resources/no_kreftregisteret_test
   metadata:
     dir: ${datastore.root}/metadata
-    data-store: ${datastore.metadata.dir}/data-store.json
+    data-store: ${datastore.metadata.dir}/datastore.json
     versions: ${datastore.metadata.dir}/versions.json
 #   MVP1 only
-    metadata-all: ${datastore.metadata.dir}/metadata-all-test__1_0_0.json
+    metadata-all: ${datastore.metadata.dir}/metadata-all__1_0_0.json
   dataset:
     dir: ${datastore.root}/dataset
 ---
