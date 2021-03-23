@@ -32,6 +32,9 @@ public class MetadataServiceImpl implements MetadataService {
             List<Map> datasets = (List<Map>) metadataAll.get("dataStructures");
             for (Map dataset: datasets) {
                 if (Objects.equals(metadataQuery.getNames().get(0), dataset.get("name"))) {
+                    if ( ! metadataQuery.getIncludeAttributes() ){
+                        dataset.remove("attributeVariables");
+                    }
                     return dataset;
                 }
             }
