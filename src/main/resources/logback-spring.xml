@@ -39,7 +39,7 @@
                         "statusCode": "#asLong{%mdc{statusCode}}",
                         "responseTime": "#asLong{%mdc{responseTime}}",
                         "message": "%message",
-                        "error": "[%thread] - %msg%n%stack{full,full,full,rootFirst,regex1,regex2,evaluatorName}"
+                        "error.stack": "[%thread] - %msg%n%stack{full,full,full,rootFirst,regex1,regex2,evaluatorName}"
                         }
                     </pattern>
                 </pattern>
